@@ -1,4 +1,12 @@
-# NomNom Bot
+# Table of Content
+Frontend
+
+
+
+Backend
+
+
+# NomNom Bot 🍳
 
 > Senior Capstone
 
