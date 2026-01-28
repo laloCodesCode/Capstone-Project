@@ -1,0 +1,33 @@
+
+
+
+
+
+# Virtual environment errors for Python
+.venv/
+venv
+
+
+
+# environment variables
+.env 
+
+
+
+# Editor junk 
+.DS_Store 
+.vscode/
+.idea/
+
+
+
+
+
+# python junk
+__pycache__/
+*.pyc
+
+
+
+
+
