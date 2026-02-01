@@ -26,9 +26,9 @@ class UserResponse(BaseModel):
     email: EmailStr
     role: str
    
-   # Helper inner congfig class
+   # Helper inner config class
     class Config: 
-        from_attributes = True
+        orm_mode = True
 
 
 

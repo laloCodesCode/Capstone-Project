@@ -8,7 +8,7 @@ from sqlalchemy.sql import func
 from app.db.base import Base
 
 class User(Base):
-    _tablename_ = "users"
+    __tablename__ = "users"
 
     # Uses UUID utility to create user_id
     user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
