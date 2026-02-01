@@ -8,7 +8,7 @@ from sqlalchemy.sql import func
 from app.db.base import Base
 
 class User(Base):
-    _tablename_ = "Users"
+    _tablename_ = "users"
 
     # Uses UUID utility to create user_id
     user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -26,12 +26,12 @@ class User(Base):
 
 
     # Create password
-    passworrd: Mapped[str] = mapped_column(String(500), nullable=False)
+    password: Mapped[str] = mapped_column(String(500), nullable=False)
 
 
     # Create role
     # Default type = USER
-    role: Mapped[str] = mapped_column(String(30), nullble=False, default="USER")
+    role: Mapped[str] = mapped_column(String(30), nullable=False, default="USER")
 
 
 
