@@ -10,7 +10,7 @@ from sqlalchemy.sql import func
 from backend.app.db.base import Base
 
 class Reports(Base):
-   __tablename__ = "reports"
+   __tablename__ = "report"
 
    """
    report_id
