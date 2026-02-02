@@ -41,8 +41,8 @@ def list_listings(db: Session, *, skip: int = 0, limit: int = 20, active_only: b
     if user_id:
         stmt = stmt.where(Item_Listing.user_id == user_id)
 
-    stmt = stmt.order_by(Item_Listing.createdAt.desc()).offset(skip.limit(limit)
-    return list)db.execute(stmt).scalars().all()
+    stmt = stmt.order_by(Item_Listing.createdAt.desc()).offset(skip).limit(limit)
+    return list(db.execute(stmt).scalars().all())
 
 
 # Update item listing
