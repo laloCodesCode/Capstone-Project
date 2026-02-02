@@ -1,13 +1,12 @@
 import uuid
-from sqlalchemy import DateTime, ForeignKey, String
+from sqlalchemy import DateTime, ForeignKey, String, func
 from sqlalchemy.dialects.postgresql import UUID 
 from sqlalchemy.orm import relationship, Mapped, mapped_column
-from sqlalchemy import func
 
-from app.db.base import Base
+from backend.app.db.base import Base
+class UserDocuments(Base):
 
-class User_Documents(Base): 
-    __tablename__ = "User_Documents"
+    __tablename__ = "user_documents"
 
 
     # Create user_documents_id
@@ -15,8 +14,12 @@ class User_Documents(Base):
 
 
     # Map user_documents with user_id 
-    user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("user_id", ondelete="CASCADE", nullable=False, index=True))
-
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("user.user_id", ondelete="CASCADE", ),
+        nullable=False,
+        index=True,
+    )
 
     # Create document_type
     document_type: Mapped[str] = mapped_column(String(50), nullable=False)
