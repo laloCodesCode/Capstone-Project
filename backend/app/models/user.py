@@ -7,6 +7,7 @@ from backend.app.db.base import Base
 
 
 class User(Base):
+    __tablename__ = "users"
     __tablename__ = "user"
 
     # Primary key UUID
@@ -22,6 +23,15 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False, index=True)
 
     password: Mapped[str] = mapped_column(String(500), nullable=False)
+
+    # Create password
+    password: Mapped[str] = mapped_column(String(500), nullable=False)
+
+
+    # Create role
+    # Default type = USER
+    role: Mapped[str] = mapped_column(String(30), nullable=False, default="USER")
+
 
     # role default is USER
     role: Mapped[str] = mapped_column(String(30), nullable=False, default="USER")
