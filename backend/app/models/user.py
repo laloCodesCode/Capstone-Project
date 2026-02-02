@@ -39,6 +39,12 @@ class User(Base):
     # TODO: Add realtions!
 
     listings = relationship("ItemListing", back_populates="owner", cascade="all, delete-orphan")
+    documents = relationship(
+        "UserDocuments",
+        back_populates="owner",
+        cascade="all, delete-orphan"
+    )
+    reports = relationship("Reports", back_populates="", cascade="all, delete-orphan")
 
     threads_as_seller = relationship(
         "MessageThread",
@@ -60,4 +66,10 @@ class User(Base):
         foreign_keys="Message.sender_id",
         back_populates="sender",
         cascade="all, delete-orphan",
+    )
+
+    reports = relationship(
+        "Reports",
+        back_populates="reporter",
+        cascade="all, delete-orphan"
     )

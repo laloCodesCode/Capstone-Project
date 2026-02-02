@@ -3,7 +3,7 @@ from datetime import datetime
 
 from sqlalchemy import String, DateTime, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
 
@@ -67,3 +67,6 @@ class Reports(Base):
         server_default=func.now(),
         nullable=False,
     )
+
+    reporter = relationship("User", back_populates="reports")
+    listing = relationship("ItemListing", back_populates="reports")

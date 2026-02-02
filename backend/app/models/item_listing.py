@@ -50,3 +50,8 @@ class ItemListing(Base):
         back_populates="listing",
         cascade="all, delete-orphan",
     )
+    reports = relationship(
+        "Reports",
+        back_populates="listing",
+        cascade="all, delete-orphan"
+    )
