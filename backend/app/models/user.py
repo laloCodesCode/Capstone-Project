@@ -7,7 +7,7 @@ from backend.app.db.base import Base
 
 
 class User(Base):
-    __tablename__ = "users"
+    #__tablename__ = "users"
     __tablename__ = "user"
 
     # Primary key UUID
