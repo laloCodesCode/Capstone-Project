@@ -15,3 +15,7 @@ services:
 
 volumes:
   pgdata:
+
+    #docker ps
+  #docker exec -it geniemart-db psql -U postgres -d geniemart -c "\dt"
+  #docker exec -it geniemart-db psql -U postgres -d geniemart -c "\d message_thread"
