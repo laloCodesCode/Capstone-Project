@@ -43,3 +43,10 @@ class ItemListing(Base):
 
 
     #TODO: relationships                
+    owner = relationship("User", back_populates="listings")
+
+    threads = relationship(
+        "MessageThread",
+        back_populates="listing",
+        cascade="all, delete-orphan",
+    )

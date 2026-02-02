@@ -3,7 +3,7 @@ from datetime import datetime
 
 from sqlalchemy import ForeignKey, DateTime, UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import mapped_column, Mapped
+from sqlalchemy.orm import mapped_column, Mapped, relationship
 from sqlalchemy.sql import func
 
 from backend.app.db.base import Base
@@ -53,3 +53,8 @@ class MessageThread(Base):
             "listing_id", "buyer_id", "seller_id", name="uq_thread_listing_buyer_seller"
         ),
     )
+    listing = relationship("ItemListing", back_populates="threads")
+    messages = relationship("Message", back_populates="thread", cascade="all, delete-orphan")
+
+    seller = relationship("User", foreign_keys=[seller_id], back_populates="threads_as_seller")
+    buyer = relationship("User", foreign_keys=[buyer_id], back_populates="threads_as_buyer")

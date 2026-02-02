@@ -1,7 +1,7 @@
 import uuid
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from backend.app.db.base import Base
 
@@ -28,4 +28,26 @@ class User(Base):
 
     # TODO: Add realtions!
 
+    listings = relationship("ItemListing", back_populates="owner", cascade="all, delete-orphan")
 
+    threads_as_seller = relationship(
+        "MessageThread",
+        foreign_keys="MessageThread.seller_id",
+        back_populates="seller",
+        cascade="all, delete-orphan",
+    )
+
+    threads_as_buyer = relationship(
+        "MessageThread",
+        foreign_keys="MessageThread.buyer_id",
+        back_populates="buyer",
+        cascade="all, delete-orphan",
+    )
+
+    # optional but usually useful:
+    messages_sent = relationship(
+        "Message",
+        foreign_keys="Message.sender_id",
+        back_populates="sender",
+        cascade="all, delete-orphan",
+    )

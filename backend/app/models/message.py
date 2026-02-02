@@ -3,7 +3,7 @@ from datetime import datetime
 
 from sqlalchemy import ForeignKey, DateTime, Text, Index
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
 from backend.app.db.base import Base
@@ -39,3 +39,6 @@ class Message(Base):
     __table_args__ = (
         Index("ix_message_thread_created", "thread_id", "created_at"),
     )
+
+    thread = relationship("MessageThread", back_populates="messages")
+    sender = relationship("User", back_populates="messages_sent")
