@@ -1,11 +1,12 @@
 import uuid
 from sqlalchemy.orm import Session
-from models.user import user
+from models.user import User
+from models.reports import Reports
 from schemas.user import UserCreate
+from schemas.reports import ReportCreate
 
-
-def create_report():
-    pass
+def create_report(db: Session, report: ReportCreate):
+    db_report = Reports()
 
 
 def get_report():
