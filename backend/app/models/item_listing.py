@@ -3,12 +3,11 @@ from sqlalchemy import String, Text, Boolean, DateTime, Numeric, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from sqlalchemy.sql import func
+from datetime import datetime
+from backend.app.db.base import Base
 
-from app.db.base import Base
-
-
-class Item_Listing(Base):
-    __tablename__ = "Item_listing"
+class ItemListing(Base):
+    __tablename__ = "item_listing"
 
 
     # Create listing_id
@@ -16,8 +15,12 @@ class Item_Listing(Base):
 
 
     # Map listing with user_id
-    user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("user_id", ondelete="CASCADE", nullable=False, index=True))
-
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("user.user_id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
 
     # Create title
     title: Mapped[str] = mapped_column(String(100), nullable=False)
@@ -32,11 +35,11 @@ class Item_Listing(Base):
 
 
     # Create createdAt
-    createdAt: Mapped[DateTime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
 
     # Create isActive
-    isActive: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
 
 
     #TODO: relationships                
