@@ -53,6 +53,7 @@ class MessageThread(Base):
             "listing_id", "buyer_id", "seller_id", name="uq_thread_listing_buyer_seller"
         ),
     )
+
     listing = relationship("ItemListing", back_populates="threads")
     messages = relationship("Message", back_populates="thread", cascade="all, delete-orphan")
 
