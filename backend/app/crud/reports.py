@@ -1,30 +1,54 @@
 import uuid
+
 from sqlalchemy.orm import Session
-from models.user import User
 from models.reports import Reports
-from schemas.user import UserCreate
 from schemas.reports import ReportCreate
 
+
+
+
+"""
+This reports the listing but fucntionally reports the user as
+well !
+"""
+
+
+
+
+
+
+
+
+
+
+
 def create_report(db: Session, report: ReportCreate):
-    db_report = Reports()
+    db_report = Reports(
+        user_id = report.user_id, listing_id=report.listing_id, decription=report.description
+    )
+    db.add(db_report)
+    db.commit()
+    db.refersh(db_report)
+    return db_report
 
 
-def get_report():
-    pass
+
+def get_report(db: Session, report_id: uuid.UUID):
+    return db.query(Reports).filter(Reports.report_id==report_id).first()
 
 
-def get_report_by_user_id():
-    pass
 
 
-def get_report_by_email():
-    pass
+def get_reports(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(Reports).offset(skip).limit(limit).all()
+
+def delete_report(db: Session, report_id: uuid.UUID):
+    report = db.query(Reports).filter(Reports.report_id==report_id).first()
+    if not report:
+        return None 
 
 
-def get_reports():
-    pass
 
-
-# Presumably delete the report once the infraction has been handled
-def delet_report():
-    pass
+    db.delete(report)
+    db.commit()
+    return report
