@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 
 from routers import routes_user
-from db.base import Base 
+from routers import routes_reports
+from db.base import Base
 from db.session import engine
 
 
@@ -21,5 +22,7 @@ def health():
 
 
 
-#including all the routers for user 
+#including all the routers for user
 app.include_router(user.router)
+#including all the routers for the reports 
+app.include_router(reports.router)
