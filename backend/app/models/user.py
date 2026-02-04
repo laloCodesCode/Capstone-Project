@@ -37,7 +37,7 @@ class User(Base):
     role: Mapped[str] = mapped_column(String(30), nullable=False, default="USER")
 
     # TODO: Add realtions!
-    
+
 
     # listings
     listings = relationship("ItemListing", back_populates="owner", cascade="all, delete-orphan")
@@ -54,8 +54,8 @@ class User(Base):
         back_populates="seller",
         cascade="all, delete-orphan",
     )
-    
-    # Messaging 
+
+    # Messaging
     threads_as_buyer = relationship(
         "MessageThread",
         foreign_keys="MessageThread.buyer_id",
@@ -73,7 +73,7 @@ class User(Base):
 
     # reports
     reports = relationship(
-        "Reports", 
+        "Reports",
         back_populates="user",
         cascade= "all, delete-orphan"
     )
