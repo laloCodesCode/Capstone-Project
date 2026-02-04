@@ -24,5 +24,5 @@ def health():
 
 #including all the routers for user
 app.include_router(user.router)
-#including all the routers for the reports 
+#including all the routers for the reports
 app.include_router(reports.router)
