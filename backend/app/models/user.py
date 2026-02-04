@@ -22,15 +22,9 @@ class User(Base):
 
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False, index=True)
 
-    password: Mapped[str] = mapped_column(String(500), nullable=False)
 
     # Create password
     password: Mapped[str] = mapped_column(String(500), nullable=False)
-
-
-    # Create role
-    # Default type = USER
-    role: Mapped[str] = mapped_column(String(30), nullable=False, default="USER")
 
 
     # role default is USER
