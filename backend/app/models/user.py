@@ -22,15 +22,9 @@ class User(Base):
 
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False, index=True)
 
-    password: Mapped[str] = mapped_column(String(500), nullable=False)
 
     # Create password
     password: Mapped[str] = mapped_column(String(500), nullable=False)
-
-
-    # Create role
-    # Default type = USER
-    role: Mapped[str] = mapped_column(String(30), nullable=False, default="USER")
 
 
     # role default is USER
@@ -38,14 +32,16 @@ class User(Base):
 
     # TODO: Add realtions!
 
+
+    # listings
     listings = relationship("ItemListing", back_populates="owner", cascade="all, delete-orphan")
     documents = relationship(
         "UserDocuments",
         back_populates="owner",
         cascade="all, delete-orphan"
     )
-    reports = relationship("Reports", back_populates="", cascade="all, delete-orphan")
 
+    # documents
     threads_as_seller = relationship(
         "MessageThread",
         foreign_keys="MessageThread.seller_id",
@@ -53,6 +49,7 @@ class User(Base):
         cascade="all, delete-orphan",
     )
 
+    # Messaging
     threads_as_buyer = relationship(
         "MessageThread",
         foreign_keys="MessageThread.buyer_id",
@@ -60,7 +57,7 @@ class User(Base):
         cascade="all, delete-orphan",
     )
 
-    # optional but usually useful:
+    # optional of Messaging but usually useful:
     messages_sent = relationship(
         "Message",
         foreign_keys="Message.sender_id",
@@ -68,8 +65,9 @@ class User(Base):
         cascade="all, delete-orphan",
     )
 
+    # reports
     reports = relationship(
         "Reports",
-        back_populates="reporter",
-        cascade="all, delete-orphan"
+        back_populates="user",
+        cascade= "all, delete-orphan"
     )
