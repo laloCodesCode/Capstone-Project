@@ -28,7 +28,7 @@ class Item_ListingUpdate(BaseModel):
     title: Optional[str] = Field(None, max_length=100)
     description: Optional[str] = Field(None, max_length=200)
     price: Optional[Decimal] = Field(None, ge=0)
-    isActive: Optional[bool] = None
+    is_active: Optional[bool] = None
 
 
 
@@ -41,8 +41,8 @@ class Item_ListingOut(Item_ListingBase):
     id: UUID
     user_id: UUID
 
-    isActive:bool
-    createdAt: datetime
+    is_active: bool
+    created_at: datetime
 
 
 

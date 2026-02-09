@@ -6,12 +6,12 @@ from sqlalchemy.sql import func
 from datetime import datetime
 from backend.app.db.base import Base
 
-class ItemListing(Base):
+class Item_Listing(Base):
     __tablename__ = "item_listing"
 
 
     # Create listing_id
-    listing_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    item_listing_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
 
 
     # Map listing with user_id
@@ -34,11 +34,11 @@ class ItemListing(Base):
     price: Mapped[float] = mapped_column(Numeric(10, 2), nullable=False)
 
 
-    # Create createdAt
+    # Create created_at
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
 
-    # Create isActive
+    # Create is_active
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
 
 
