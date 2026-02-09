@@ -18,7 +18,7 @@ def create_listing(db: Session, *, user_id: UUID, listing_in: Item_ListingCreate
         title=listing_in.title,
         description=listing_in.description,
         price=listing_in.price,
-        isActive=True,
+        is_active=True,
     )
     db.add(listing)
     db.commit()
@@ -37,7 +37,7 @@ def list_listings(db: Session, *, skip: int = 0, limit: int = 20, active_only: b
     """List all item listings with pagination."""
     stmt = select(Item_Listing)
     if active_only:
-        stmt = stmt.where(Item_Listing.isActive == True)
+        stmt = stmt.where(Item_Listing.is_active == True)
     if user_id:
         stmt = stmt.where(Item_Listing.user_id == user_id)
 
@@ -47,14 +47,12 @@ def list_listings(db: Session, *, skip: int = 0, limit: int = 20, active_only: b
 
 # Update item listing
 def update_listing(db: Session, *, listing: Item_Listing, listing_in: Item_ListingUpdate,) -> Item_Listing:
-    """Update an item listing."""
-    data = listing_in.model_demp(exclde_unset=True)
+    data = listing_in.model_dump(exclude_unset=True)
 
     for field, value in data.items():
         setattr(listing, field, value)
 
         
-    db.add(listing)
     db.commit()
     db.refresh(listing)
     return listing
@@ -63,8 +61,7 @@ def update_listing(db: Session, *, listing: Item_Listing, listing_in: Item_Listi
 
 # Deactivate item listing
 def deactivate_lisitng(db: Session, *, listing: Item_Listing) -> Item_Listing:
-    """Deactivate an item listing."""
-    listing.isActive = False
+    listing.is_active = False
     db.add(listing)
     db.commit()
     db.refresh(listing)
@@ -73,7 +70,6 @@ def deactivate_lisitng(db: Session, *, listing: Item_Listing) -> Item_Listing:
 
 # Delete lisitng
 def delete_lsiting(db: Session, *, listing: Item_Listing) -> Item_Listing:
-    """Delete an item listing."""
     db.delete(listing)
     db.commit()
     return listing
