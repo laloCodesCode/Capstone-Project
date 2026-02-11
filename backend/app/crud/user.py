@@ -6,8 +6,8 @@ DELETE: Remove a user
 """
 import uuid 
 from sqlalchemy.orm import Session
-from models.user import user
-from schemas.user import UserCreate
+from backend.app.models.user import User
+from backend.app.schemas.user import UserCreate
 
 # New user
 # NOTE: password is NOT yet hashed
@@ -20,14 +20,14 @@ def create_user(db: Session, user: UserCreate):
 
 # Get specific user by default using their ID
 def get_user(db: Session, user_id: uuid.UUID):
-    return db.query(user).filter(user.user_id == user_id).fist()
+    return db.query(User).filter(User.user_id == user_id).fist()
 
 # Get specific user by email
-def get_user_by_email(db: Session, email: str):
-    return db.query(user).offset(skip).limit(limit).all()
+#def get_user_by_email(db: Session, email: str):
+    return db.query(User).offset(skip).limit(limit).all()
 
 # Get a collection of users
 def get_users(db: Session, skip: int = 0, limit : int = 100):
-    return db.query(user).offset(skip).limit(limit).all()
+    return db.query(User).offset(skip).limit(limit).all()
 
 

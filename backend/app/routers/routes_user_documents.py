@@ -1,9 +1,9 @@
 import uuid 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from crud import user_documents_crud as crud_user_documents
-from schemas.user_documents import User_DocumentsCreate, User_DocumentsBase, User_documentsUpdate, User_DocumentOut
-from db.session import get_db
+from backend.app.crud import user_documents_crud as crud_user_documents
+from backend.app.schemas.user_documents import User_DocumentsCreate, User_DocumentsUpdate, User_DocumentOut
+from backend.app.api.deps import get_db
 
 
 router = APIRouter(prefix="/user-documents", tags=["user-documents"])
@@ -11,7 +11,7 @@ router = APIRouter(prefix="/user-documents", tags=["user-documents"])
 
 # Route to create new user document tied with a user
 @router.post("/", response_model=User_DocumentOut)
-def create_user_document_endpoint(user_document: User_DocumentsCreate, db: Session = Depends(get_db), current_user: uuid.UUID = Depends(crud_user_documents.get_current_user)):
+def create_user_document_endpoint(user_document: User_DocumentsCreate, db: Session = Depends(get_db)):
     return crud_user_documents.create_user_document(db, user_document)  
 
 
@@ -26,7 +26,7 @@ def read_user_document(user_document_id: uuid.UUID, db: Session = Depends(get_db
 
 # Route to update a user doc by its uuid
 @router.put("/{user_document_id}", response_model=User_DocumentOut)
-def update_user_document_endpoint(user_document_id: uuid.UUID, user_document: User_documentsUpdate, db: Session = Depends(get_db)):
+def update_user_document_endpoint(user_document_id: uuid.UUID, user_document: User_DocumentsUpdate, db: Session = Depends(get_db)):
     db_user_document = crud_user_documents.get_document(db, user_document_id)
 
     if not db_user_document:

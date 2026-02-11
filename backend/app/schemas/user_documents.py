@@ -21,7 +21,7 @@ class User_DocumentsCreate(User_DocumentsBase):
 
 
 # Update user document
-class User_documentsUpdate(BaseModel):
+class User_DocumentsUpdate(BaseModel):
     document_type: Optional[str] = Field(None, max_length=50)
     status: Optional[str] = Field(None, max_length=20)
 

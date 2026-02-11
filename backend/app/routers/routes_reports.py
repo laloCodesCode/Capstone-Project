@@ -5,9 +5,9 @@ import uuid
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 # NEEDED from the dev defined
-from crud import reports as c_report
-from schemas.reports import ReportCreate, ReportResponse
-from db.session import get_db
+from backend.app.crud import reports as c_report
+from backend.app.schemas.reports import ReportCreate, ReportResponse
+from backend.app.api.deps import get_db
 
 
 

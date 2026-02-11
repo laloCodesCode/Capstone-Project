@@ -6,9 +6,9 @@
 import uuid 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from crud import user as crud_user
-from schemas.user import UserCreate, UserResponse
-from db.session import get_db
+from backend.app.crud import user as crud_user
+from backend.app.schemas.user import UserCreate, UserResponse
+from backend.app.api.deps import get_db
 
 
 
