@@ -6,7 +6,7 @@ from sqlalchemy.sql import func
 from datetime import datetime
 from backend.app.db.base import Base
 
-class Item_Listing(Base):
+class ItemListing(Base):
     __tablename__ = "item_listing"
 
 
