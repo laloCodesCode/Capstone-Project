@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from backend.app.routers import message_thread, message
+from backend.app.routers import message_thread, message, routes_item_listing, routes_reports, routes_user, routes_user_documents
 
 
 app = FastAPI(title="Capstone Marketplace API")
@@ -13,3 +13,7 @@ def health():
 
 app.include_router(message.router)
 app.include_router(message_thread.router)
+app.include_router(routes_item_listing.router)
+app.include_router(routes_reports.router)
+app.include_router(routes_user.router)
+app.include_router(routes_user_documents.router)
