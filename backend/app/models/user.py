@@ -22,6 +22,7 @@ class User(Base):
 
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False, index=True)
 
+    username: Mapped[str] = mapped_column(String(30), unique=True, nullable=False)
 
     # Create password
     password: Mapped[str] = mapped_column(String(500), nullable=False)
