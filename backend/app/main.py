@@ -1,8 +1,11 @@
 from fastapi import FastAPI
 
 from backend.app.db import engine
-from backend.app.db.base import Base
-from backend.app.routers import message_thread, message, routes_item_listing, routes_reports, routes_user, routes_user_documents,auth
+#from backend.app.db.base import Base
+from app.db.base import Base
+
+#from backend.app.routers import message_thread, message, routes_item_listing, routes_reports, routes_user, routes_user_documents,auth
+from app.routers import message_thread, message, routes_item_listing, routes_reports, routes_user, routes_user_documents,auth
 
 
 Base.metadata.create_all(bind=engine)
