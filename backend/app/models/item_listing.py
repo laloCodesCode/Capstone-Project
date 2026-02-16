@@ -4,8 +4,8 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from sqlalchemy.sql import func
 from datetime import datetime
-from backend.app.db.base import Base
-
+#from backend.app.db.base import Base
+from app.db.base import Base
 class ItemListing(Base):
     __tablename__ = "item_listing"
 

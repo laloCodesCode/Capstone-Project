@@ -6,8 +6,8 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 from sqlalchemy.sql import func
 
-from backend.app.db.base import Base
-
+#from backend.app.db.base import Base
+from app.db.base import Base
 
 class MessageThread(Base):
     __tablename__ = "message_thread"

@@ -5,9 +5,13 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 import uuid
-from backend.app.db.base import Base
 
+#from backend.app.db.base import Base
+from app.db.base import Base
 class ItemImage(Base):
+   
+
+   
    __tablename__ = 'item_listing'
 
    image_id: Mapped[uuid.UUID] = mapped_column(

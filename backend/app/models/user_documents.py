@@ -3,7 +3,8 @@ from sqlalchemy import DateTime, ForeignKey, String, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 
-from backend.app.db.base import Base
+#from backend.app.db.base import Base
+from app.db.base import Base
 class UserDocuments(Base):
 
     __tablename__ = "user_document"
