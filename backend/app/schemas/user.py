@@ -1,6 +1,6 @@
 
 from uuid import UUID
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
 
 
 class UserCreate(BaseModel):
@@ -21,9 +21,14 @@ class UserResponse(BaseModel):
     username: str
     role: str
 
+
+model_config = ConfigDict(from_attributes=True)
+
+
+
    # Helper inner config class
-    class Config:
-        orm_mode = True
+    #class :
+     #   orm_mode = True
 
 
 
