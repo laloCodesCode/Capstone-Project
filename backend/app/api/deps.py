@@ -7,8 +7,10 @@ from sqlalchemy.orm import Session
 
 from backend.app.core.security import decode_access_token
 from backend.app.db import SessionLocal
-from backend.app.models.user import User
 
+
+#from backend.app.models.user import User
+from app.models import User
 
 def get_db():
     with SessionLocal() as db:

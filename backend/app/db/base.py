@@ -4,4 +4,7 @@ class Base(DeclarativeBase):
     pass
 
 # import models so they register with Base.metadata
-from app.models import user, item_listing, message, message_thread, reports, user_documents  # noqa: E402,F401
+#from app.models import user, item_listing, message, message_thread, reports, user_documents  # noqa: E402,F401
+
+
+from app import models 

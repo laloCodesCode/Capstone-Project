@@ -5,7 +5,14 @@ from sqlalchemy.orm import Session
 
 from backend.app.api.deps import get_db, get_current_user
 from backend.app.crud.message import create_message, list_messages_for_thread
-from backend.app.models.user import User
+
+
+#from backend.app.models.user import User
+from app.models import User
+
+
+
+
 from backend.app.schemas.message import MessageOut, MessageCreate
 
 router = APIRouter(prefix="/threads", tags=["messages"])

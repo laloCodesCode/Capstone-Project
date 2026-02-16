@@ -6,7 +6,15 @@ from sqlalchemy.orm import Session
 
 from backend.app.api.deps import get_db, get_current_user
 from backend.app.crud.thread import list_user_threads, create_thread, get_thread_for_user
-from backend.app.models.user import User
+
+
+
+
+#from backend.app.models.user import User
+from app.models import User
+
+
+
 from backend.app.schemas.message import MessageOut
 from backend.app.schemas.message_thread import MessageThreadCreate, MessageThreadOut
 
