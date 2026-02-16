@@ -18,7 +18,7 @@ class MessageThread(Base):
 
     listing_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
-        ForeignKey("item_listing.listing_id", ondelete="CASCADE"),
+        ForeignKey("item_listing.item_listing_id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )

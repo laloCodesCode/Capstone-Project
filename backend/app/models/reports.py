@@ -6,7 +6,6 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
-
 from backend.app.db.base import Base
 
 
@@ -27,9 +26,9 @@ class Reports(Base):
         index=True,
     )
 
-    listing_id: Mapped[uuid.UUID] = mapped_column(
+    item_listing_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
-        ForeignKey("item_listing.listing_id", ondelete="CASCADE"),
+        ForeignKey("item_listing.item_listing_id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
@@ -42,5 +41,5 @@ class Reports(Base):
         nullable=False,
     )
 
-    reporter = relationship("User", back_populates="reports")
+    user = relationship("User", back_populates="reports")
     listing = relationship("ItemListing", back_populates="reports")

@@ -1,29 +1,24 @@
 
 from uuid import UUID
-from datetime import datetime
 from pydantic import BaseModel, EmailStr
 
 
-
-
-
-# Hidding some feilds of information from the user
-
-
-# Feilds that need to be provided by the user when creating an account
 class UserCreate(BaseModel):
     first_name: str
     last_name: str
     email: EmailStr
+    username: str
     password: str
 
 
-# Protected feilds for privacy
 class UserResponse(BaseModel):
+
     user_id: UUID
     first_name: str
     last_name: str
     email: EmailStr
+    role: str
+    username: str
     role: str
 
    # Helper inner config class
