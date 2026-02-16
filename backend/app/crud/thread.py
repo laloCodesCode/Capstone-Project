@@ -4,9 +4,9 @@ from fastapi import HTTPException
 from sqlalchemy import select, or_
 from sqlalchemy.orm import Session
 
-from backend.app.models.message_thread import MessageThread
-from backend.app.models.item_listing import ItemListing
-
+#from backend.app.models.message_thread import MessageThread
+#from backend.app.models.item_listing import ItemListing
+from app.models import MessageThread, ItemListing
 
 def create_thread(db: Session, current_user, listing_id: UUID) -> MessageThread:
     listing = db.get(ItemListing, listing_id)

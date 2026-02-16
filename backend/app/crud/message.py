@@ -4,9 +4,9 @@ from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from backend.app.models.message_thread import MessageThread
-from backend.app.models.message import Message
-
+#from backend.app.models.message_thread import MessageThread
+#from backend.app.models.message import Message
+from app.models import MessageThread, Message
 
 def create_message(db: Session, current_user, thread_id: UUID, body: str) -> Message:
     thread = db.get(MessageThread, thread_id)

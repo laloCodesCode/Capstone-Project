@@ -6,7 +6,10 @@ from uuid import UUID
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 
-from backend.app.models.item_listing import ItemListing
+#from backend.app.models.item_listing import ItemListing
+from app.models import ItemListing
+
+
 # Need to make shcemas for create and update
 from backend.app.schemas.item_listing import Item_ListingCreate, Item_ListingUpdate
 

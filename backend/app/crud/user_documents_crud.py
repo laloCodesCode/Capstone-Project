@@ -6,7 +6,9 @@ from uuid import UUID
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from backend.app.models.user_documents import UserDocuments
+#from backend.app.models.user_documents import UserDocuments
+from app.models import UserDocuments
+
 from backend.app.schemas.user_documents import User_DocumentsCreate, User_DocumentsUpdate
 
 

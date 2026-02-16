@@ -7,7 +7,16 @@ from sqlalchemy.orm import Session
 from backend.app.api.deps import get_db, get_current_user
 from backend.app.core.security import verify_password, create_access_token
 from backend.app.crud.user import get_user_by_email_or_username, create_user
-from backend.app.models.user import User
+
+
+
+
+#from backend.app.models.user import User
+from app.models import User
+
+
+
+
 from backend.app.schemas.user import UserCreate, UserResponse
 
 router = APIRouter(tags=["auth"])
