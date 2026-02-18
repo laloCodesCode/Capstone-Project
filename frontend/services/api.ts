@@ -1,4 +1,4 @@
-
+import axios from "axios";
 
 
 
@@ -6,7 +6,7 @@
 
 
 // Base URL var, need to setup some environmental vars
-const BASE_URL;
+const BASE_URL = http://127.0.0.1:8000
 
 
 
@@ -20,19 +20,10 @@ if (!BASE_URL) {
 
 
 
-//Setup a generic function for api calls 
-export async function apiFetch<T>(endpoin: string, options? RequestInit) Promise < T > {
+export const API = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
-
-
-
-  // API BODY
-
-
-  //TODO figure it out!
-
-
-
-
-
-}
