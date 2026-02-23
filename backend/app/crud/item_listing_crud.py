@@ -15,7 +15,6 @@ from backend.app.schemas.item_listing import Item_ListingCreate, Item_ListingUpd
 
 # Create new item listing
 def create_listing(db: Session, *, user_id: UUID, listing_in: Item_ListingCreate) -> ItemListing:
-    """Create a new item listing owned by uuid user_id."""
     listing = ItemListing(
         user_id=user_id,
         title=listing_in.title,
@@ -31,20 +30,19 @@ def create_listing(db: Session, *, user_id: UUID, listing_in: Item_ListingCreate
 
 # Get item listing
 def get_listing(db: Session, *, listing_id: UUID) -> Optional[ItemListing]:
-    """Get an item listing by its listing_id."""
     return db.get(ItemListing, listing_id)
 
 
 # List all item listings
 def list_listings(db: Session, *, skip: int = 0, limit: int = 20, active_only: bool = True, user_id: Optional[UUID] = None,) -> list[Item_Listing]:
-    """List all item listings with pagination."""
+
     stmt = select(ItemListing)
     if active_only:
         stmt = stmt.where(ItemListing.is_active == True)
     if user_id:
         stmt = stmt.where(ItemListing.user_id == user_id)
 
-    stmt = stmt.order_by(ItemListing.createdAt.desc()).offset(skip).limit(limit)
+    stmt = stmt.order_by(ItemListing.created_at.desc()).offset(skip).limit(limit)
     return list(db.execute(stmt).scalars().all())
 
 
@@ -63,7 +61,7 @@ def update_listing(db: Session, *, listing: ItemListing, listing_in: Item_Listin
 
 
 # Deactivate item listing
-def deactivate_lisitng(db: Session, *, listing: ItemListing) -> ItemListing:
+def deactivate_listing(db: Session, *, listing: ItemListing) -> ItemListing:
     listing.is_active = False
     db.add(listing)
     db.commit()
@@ -72,7 +70,7 @@ def deactivate_lisitng(db: Session, *, listing: ItemListing) -> ItemListing:
 
 
 # Delete lisitng
-def delete_lsiting(db: Session, *, listing: ItemListing) -> ItemListing:
+def delete_listing(db: Session, *, listing: ItemListing) -> ItemListing:
     db.delete(listing)
     db.commit()
     return listing
