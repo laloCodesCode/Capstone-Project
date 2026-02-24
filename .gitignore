@@ -5,3 +5,9 @@
 .env
 .idea/
 .env
+
+frontend/node_modules
+frontend/.expo
+frontend/dist
+frontend/.env
+frontend/.env.local
