@@ -6,6 +6,8 @@ from typing import Optional
 
 from pydantic import BaseModel, Field, ConfigDict
 
+from backend.app.models import user_documents
+
 
 # Base user_document schema
 
@@ -16,7 +18,9 @@ class User_DocumentsBase(BaseModel):
 
 # Create user document
 class User_DocumentsCreate(User_DocumentsBase):
-    file_url: str
+    # file_url: str
+    pass
+
 
 
 # Update user document
@@ -30,7 +34,7 @@ class User_DocumentsUpdate(BaseModel):
 class User_DocumentOut(User_DocumentsBase):
     """API returns"""
     model_config = ConfigDict(from_attributes=True)
-    id: UUID
+    user_documents_id: UUID
     user_id: UUID
     file_url: str
     status: str

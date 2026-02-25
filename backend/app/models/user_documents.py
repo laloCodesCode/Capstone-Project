@@ -28,8 +28,7 @@ class UserDocuments(Base):
     # Create file_url
     file_url: Mapped[str] = mapped_column(String(500), nullable=False)
 
-
-    # Create status
+# Create status
     status: Mapped[str] = mapped_column(String(20), nullable=False, default="PENDING")
 
 
