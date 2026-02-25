@@ -34,7 +34,7 @@ class UserDocuments(Base):
 
 
     # Create uplaodedAt
-    uploadedAt: Mapped[DateTime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    uploaded_at: Mapped[DateTime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
     owner = relationship("User", back_populates="documents")
 

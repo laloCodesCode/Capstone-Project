@@ -16,8 +16,7 @@ class User_DocumentsBase(BaseModel):
 
 # Create user document
 class User_DocumentsCreate(User_DocumentsBase):
-    pass
-
+    file_url: str
 
 
 # Update user document
@@ -31,9 +30,7 @@ class User_DocumentsUpdate(BaseModel):
 class User_DocumentOut(User_DocumentsBase):
     """API returns"""
     model_config = ConfigDict(from_attributes=True)
-
     id: UUID
     user_id: UUID
-
     file_url: str
     status: str
