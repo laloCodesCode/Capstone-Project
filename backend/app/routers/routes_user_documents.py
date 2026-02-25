@@ -1,5 +1,5 @@
 import uuid 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, File, UploadFile
 from sqlalchemy.orm import Session
 from backend.app.crud import user_documents_crud as crud_user_documents
 from backend.app.schemas.user_documents import User_DocumentsCreate, User_DocumentsUpdate, User_DocumentOut

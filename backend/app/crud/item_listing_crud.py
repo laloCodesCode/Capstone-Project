@@ -5,6 +5,7 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session
 from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 
 #from backend.app.models.item_listing import ItemListing
 from app.models import ItemListing
@@ -34,15 +35,31 @@ def get_listing(db: Session, *, listing_id: UUID) -> Optional[ItemListing]:
 
 
 # List all item listings
-def list_listings(db: Session, *, skip: int = 0, limit: int = 20, active_only: bool = True, user_id: Optional[UUID] = None,) -> list[Item_Listing]:
+def list_listings(
+    db: Session,
+    *,
+    skip: int = 0,
+    limit: int = 20,
+    active_only: bool = True,
+    user_id: Optional[UUID] = None,
+) -> list[ItemListing]:
 
-    stmt = select(ItemListing)
+    stmt = select(ItemListing).options(
+        selectinload(ItemListing.images)   # 👈 THIS IS THE FIX
+    )
+
     if active_only:
         stmt = stmt.where(ItemListing.is_active == True)
+
     if user_id:
         stmt = stmt.where(ItemListing.user_id == user_id)
 
-    stmt = stmt.order_by(ItemListing.created_at.desc()).offset(skip).limit(limit)
+    stmt = (
+        stmt.order_by(ItemListing.created_at.desc())
+        .offset(skip)
+        .limit(limit)
+    )
+
     return list(db.execute(stmt).scalars().all())
 
 

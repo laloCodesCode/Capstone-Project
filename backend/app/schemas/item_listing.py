@@ -3,7 +3,7 @@ from __future__ import annotations
 from uuid import UUID 
 from datetime import datetime
 from decimal import Decimal
-from typing import Optional
+from typing import List, Optional
 
 from pydantic import BaseModel, Field, ConfigDict
 
@@ -14,6 +14,13 @@ class Item_ListingBase(BaseModel):
     title: str = Field(..., max_length=100)
     description: str = Field(None, max_length=200)
     price: Decimal = Field(..., ge=0)
+
+
+# Item image
+class ItemImageResponse(BaseModel):
+    image_id: UUID
+    url: str
+    is_primary: bool
 
 
 # Create item listing 
@@ -44,6 +51,8 @@ class Item_ListingOut(Item_ListingBase):
     is_active: bool
     created_at: datetime
 
+
+    images: List[ItemImageResponse] = []
 
 
 

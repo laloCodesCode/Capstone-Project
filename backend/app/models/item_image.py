@@ -20,9 +20,9 @@ class ItemImage(Base):
        default=uuid.uuid4,
    )
 
-   listing_id: Mapped[uuid.UUID] = mapped_column(
+   item_listing_id: Mapped[uuid.UUID] = mapped_column(
        UUID(as_uuid=True),
-       ForeignKey('item_listing.listing_id'),
+       ForeignKey('item_listing.item_listing_id'),
        nullable=False,
        index=True
    )
@@ -39,6 +39,8 @@ class ItemImage(Base):
    )
 
    listing = relationship("ItemListing", back_populates="images")
+
+   images = relationship("ItemImage", back_populates="listing")
 
 
 
