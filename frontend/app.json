@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "frontend",
-    "slug": "geniemart",
+    "slug": "frontend",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -43,13 +43,6 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    },
-    "extra": {
-      "router": {},
-      "eas": {
-        "projectId": "e94fdd0a-7585-4d78-8e1f-2cec891cbdf2"
-      }
-    },
-    "owner": "geniemart"
+    }
   }
 }
