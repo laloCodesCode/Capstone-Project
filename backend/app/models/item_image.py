@@ -8,7 +8,7 @@ import uuid
 from backend.app.db.base import Base
 
 class ItemImage(Base):
-   __tablename__ = 'item_listing'
+   __tablename__ = 'item_image'
 
    image_id: Mapped[uuid.UUID] = mapped_column(
        UUID(as_uuid=True),
@@ -16,13 +16,13 @@ class ItemImage(Base):
        default=uuid.uuid4,
    )
 
-   listing_id: Mapped[uuid.UUID] = mapped_column(
+   item_listing_id: Mapped[uuid.UUID] = mapped_column(
        UUID(as_uuid=True),
-       ForeignKey('item_listing.listing_id'),
+       ForeignKey('item_listing.item_listing_id'),
        nullable=False,
        index=True
    )
-   url: Mapped [str] = mapped_column(
+   file_url: Mapped [str] = mapped_column(
        String(500),
        nullable=False,
    )

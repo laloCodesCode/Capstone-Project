@@ -12,7 +12,6 @@ from backend.app.schemas.item_listing import Item_ListingCreate, Item_ListingUpd
 
 # Create new item listing
 def create_listing(db: Session, *, user_id: UUID, listing_in: Item_ListingCreate) -> ItemListing:
-    """Create a new item listing owned by uuid user_id."""
     listing = ItemListing(
         user_id=user_id,
         title=listing_in.title,
@@ -28,13 +27,11 @@ def create_listing(db: Session, *, user_id: UUID, listing_in: Item_ListingCreate
 
 # Get item listing
 def get_listing(db: Session, *, listing_id: UUID) -> Optional[ItemListing]:
-    """Get an item listing by its listing_id."""
     return db.get(ItemListing, listing_id)
 
 
 # List all item listings
 def list_listings(db: Session, *, skip: int = 0, limit: int = 20, active_only: bool = True, user_id: Optional[UUID] = None,) -> list[Item_Listing]:
-    """List all item listings with pagination."""
     stmt = select(ItemListing)
     if active_only:
         stmt = stmt.where(ItemListing.is_active == True)
