@@ -44,7 +44,9 @@ class ItemListing(Base):
 
     #TODO: relationships                
     owner = relationship("User", back_populates="listings")
-
+    images = relationship("ItemImage", back_populates="listing", cascade="all, delete-orphan")
+    
+    
     threads = relationship(
         "MessageThread",
         back_populates="listing",
