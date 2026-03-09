@@ -8,6 +8,9 @@ const BASE_URL = process.env.EXPO_PUBLIC_API_URL;
 export const authService = {
   // LOGIN LOGIC
   login: async (identifier: string, password: string): Promise<string> => {
+    console.log("BASE_URL:", BASE_URL); // add this
+    console.log("Attempting login to:", `${BASE_URL}/token`); // add this
+
     const formData = new URLSearchParams();
 
     // NOT A JSON obeject, x-www-form-urlencoded
