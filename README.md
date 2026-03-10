@@ -22,7 +22,7 @@ Backend
   - Python 3.14+
   - Node.js 
   - Expo Go on personal device and or IOS/Android emulator
-- Backend setup (Done in the genral project folder)
+- **Backend setup (Done in the genral project folder)**
   - setup the .venv mod
   ```
   python3 -m venv .ven
@@ -36,4 +36,17 @@ Backend
   ```
   uvicorn backend.app.main:app --reload --host 0.0.0.0 --port
   ```
-- Frontend
+- **Frontend**
+  - Move into the frontend directory 
+  ```
+  cd frontend
+  ```
+ - Install the node dependencies 
+ ```
+ npm i 
+ ```
+ - Run the expo project
+ ```
+ npx expo start
+ ```
+ - Follow the CLI for instructions on how to render the views
