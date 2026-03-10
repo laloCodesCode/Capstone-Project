@@ -6,12 +6,3 @@ export const api = axios.create({
     timeout: 10000,
   });
 
-  export const fetchItemListings = async (): Promise<ItemListing[]> => {
-    try {
-      const response = await api.get<ItemListing[]>("/items/");
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching item listings:", error);
-      throw error;
-    }
-  };
