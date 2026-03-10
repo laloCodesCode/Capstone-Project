@@ -1,5 +1,10 @@
 import * as SecureStore from "expo-secure-store";
-import { UserCreate, UserResponse, TokenResponse } from "../types/auth";
+import {
+  UserCreate,
+  UserResponse,
+  TokenResponse,
+  MeResponse,
+} from "../types/auth";
 
 // Untracked env vars this uses my PERSONAL IP
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL;
@@ -57,5 +62,22 @@ export const authService = {
   //Token, hinges on prevoius login to have user logged in on app launch
   getToken: async (): Promise<string | null> => {
     return await SecureStore.getItemAsync("token");
+  },
+
+  //Fetch the user profile
+  getME: async (): Promise<MeResponse> => {
+    const token = await SecureStore.getItemAsync("token");
+
+    const res = await fetch(`${BASE_URL}/me`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.detail || "Failed to fetch profile");
+    }
+    return res.json() as Promise<MeResponse>;
   },
 };
