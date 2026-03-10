@@ -38,7 +38,7 @@ class Item_ListingOut(Item_ListingBase):
     """ API returns"""
     model_config = ConfigDict(from_attributes=True)
 
-    id: UUID
+    item_listing_id: UUID
     user_id: UUID
 
     is_active: bool
