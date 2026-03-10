@@ -1,4 +1,3 @@
-//Auth screens
 import { useState } from "react";
 import {
   View,
