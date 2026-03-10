@@ -3,4 +3,5 @@
 .idea/
 .env*.local
 .env
+.env*.local
 .idea/

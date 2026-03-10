@@ -1,12 +1,19 @@
-import { View, Text, TouchableOpacity } from "react-native";
-import { useAuth } from "../../src/context/AuthContext";
+import { Text, View, StyleSheet } from "react-native";
+import { Card } from "../../src/components/item_listing";
 
 export default function HomeScreen() {
-  // const { logout } = useAuth();
-
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Home Screen</Text>
+    <View style={styles.container}>
+      <Card />
+      <Card />
+      <Card />
     </View>
   );
 }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginVertical: 20,
+    marginHorizontal: 20,
+  },
+});

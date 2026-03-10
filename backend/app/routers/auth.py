@@ -10,9 +10,9 @@ from backend.app.crud.user import get_user_by_email_or_username, create_user
 from backend.app.models.user import User
 from backend.app.schemas.user import UserCreate, UserResponse
 
-router = APIRouter(tags=["auth"])
+auth_router = APIRouter(tags=["auth"])
 
-@router.post("/token")
+@auth_router.post("/token")
 def login (
         form_data: OAuth2PasswordRequestForm = Depends(),
         db: Session = Depends(get_db)
@@ -30,7 +30,7 @@ def login (
     token = create_access_token(subject=str(user.user_id))
     return {"access_token": token, "token_type": "bearer"}
 
-@router.get("/me")
+@auth_router.get("/me")
 def me(current_user: User = Depends(get_current_user)):
     return {
         "user_id": current_user.user_id,
@@ -38,7 +38,7 @@ def me(current_user: User = Depends(get_current_user)):
         "email": current_user.email,
 
     }
-@router.post("/register", response_model=UserResponse)
+@auth_router.post("/register", response_model=UserResponse)
 def register(
         payload: UserCreate,
         db: Session = Depends(get_db),
