@@ -13,7 +13,7 @@ def create_item_listing_endpoint(
     item_listing: Item_ListingCreate,
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user),
-):    
+):
     return crud_item_listing.create_listing(
         db,
         user_id=current_user.user_id,
