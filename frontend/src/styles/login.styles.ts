@@ -75,7 +75,7 @@ export const loginStyles = StyleSheet.create({
   input: {
     borderWidth: 1,
     borderColor: colors.border,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.authCard,
     padding: 12,
     borderRadius: 8,
     fontSize: 16,
