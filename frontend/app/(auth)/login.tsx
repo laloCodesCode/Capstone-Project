@@ -11,6 +11,8 @@ import {
 import { useRouter } from "expo-router";
 import { useAuth } from "../../src/context/AuthContext";
 import { UserCreate } from "../../src/types/auth";
+import { loginStyles } from "../../src/styles/login.styles";
+import { colors } from "../../src/styles/colors";
 
 export default function LoginScreen() {
   const { login } = useAuth();
@@ -42,19 +44,16 @@ export default function LoginScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, justifyContent: "center", padding: 24, gap: 12 }}
+      style={loginStyles.container}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <Text>Welcome Back</Text>
+      <Text style={loginStyles.title}>Welcome Back Spartan</Text>
+      <Text style={loginStyles.subtitle}>Sign In Spartan!</Text>
 
       <TextInput
-        style={{
-          borderWidth: 1,
-          borderColor: "#ccc",
-          padding: 10,
-          borderRadius: 6,
-        }}
+        style={loginStyles.input}
         placeholder="Email or Username"
+        placeholderTextColor={colors.textSecondary}
         autoCapitalize="none"
         autoCorrect={false}
         value={identifier}
@@ -62,41 +61,32 @@ export default function LoginScreen() {
       />
 
       <TextInput
-        style={{
-          borderWidth: 1,
-          borderColor: "#ccc",
-          padding: 10,
-          borderRadius: 6,
-        }}
+        style={loginStyles.input}
         placeholder="Password"
+        placeholderTextColor={colors.textSecondary}
         secureTextEntry
         autoCapitalize="none"
         value={password}
         onChangeText={setPassword}
       />
 
-      {error && <Text style={{ color: "red" }}>{error}</Text>}
-      {success && <Text style={{ color: "green" }}>{success}</Text>}
+      {error && <Text style={loginStyles.errorText}>{error}</Text>}
+      {success && <Text style={loginStyles.successText}>{success}</Text>}
 
       <TouchableOpacity
-        style={{
-          backgroundColor: "#4F46E5",
-          padding: 14,
-          borderRadius: 8,
-          alignItems: "center",
-        }}
+        style={loginStyles.primaryButton}
         onPress={handleLogin}
         disabled={loading}
       >
         {loading ? (
-          <ActivityIndicator color="#fff" />
+          <ActivityIndicator color={colors.genralWhite} />
         ) : (
-          <Text style={{ color: "#fff", fontWeight: "600" }}>Log In</Text>
+          <Text style={loginStyles.primaryButtonText}>Log In</Text>
         )}
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => router.push("/(auth)/register")}>
-        <Text style={{ textAlign: "center", color: "#4F46E5" }}>
+      <TouchableOpacity style={loginStyles.linkButton} onPress={() => router.push("/(auth)/register")}>
+        <Text style={loginStyles.linkText}>
           Don't have an account? Register
         </Text>
       </TouchableOpacity>
