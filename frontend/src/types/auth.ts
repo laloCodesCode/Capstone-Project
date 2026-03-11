@@ -23,9 +23,16 @@ export interface AuthUser {
 }
 
 // interface for user profile
-// TODO : change the backend to return first_name, last_name and add the ability to change password
 export interface MeResponse {
   user_id: string;
+  first_name: string;
+  last_name: string;
   username: string;
   email: string;
+}
+
+//Password Change
+export interface PasswordChange {
+  current_password: string;
+  new_password: string;
 }

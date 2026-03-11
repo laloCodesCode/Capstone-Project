@@ -1,6 +1,6 @@
 
 from uuid import UUID
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, StrictFloat
 
 
 class UserCreate(BaseModel):
@@ -21,9 +21,16 @@ class UserResponse(BaseModel):
     username: str
     role: str
 
+# Password Change logic
+class PasswordChange(BaseModel):
+    current_password: str
+    new_password: str
+
    # Helper inner config class
     class Config:
         orm_mode = True
+
+
 
 
 

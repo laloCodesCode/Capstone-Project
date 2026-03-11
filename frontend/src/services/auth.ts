@@ -4,6 +4,7 @@ import {
   UserResponse,
   TokenResponse,
   MeResponse,
+  PasswordChange,
 } from "../types/auth";
 
 // Untracked env vars this uses my PERSONAL IP
@@ -67,17 +68,41 @@ export const authService = {
   //Fetch the user profile
   getME: async (): Promise<MeResponse> => {
     const token = await SecureStore.getItemAsync("token");
-
+    console.log("Token for /me request:", token)
     const res = await fetch(`${BASE_URL}/me`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+    if (res.status == 401) {
+      await SecureStore.deleteItemAsync("token");
+      throw new Error("Session Expired!");
+    }
     if (!res.ok) {
       const err = await res.json();
       throw new Error(err.detail || "Failed to fetch profile");
     }
     return res.json() as Promise<MeResponse>;
+  },
+
+
+  //Change the password
+  changePassword: async (payload: PasswordChange): Promise<void> => {
+    const token = await SecureStore.getItemAsync("token");
+
+
+    const res = await fetch(`${BASE_URL}/me/password`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.detail || "Failed to change password!")
+    }
   },
 };

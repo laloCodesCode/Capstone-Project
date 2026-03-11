@@ -5,10 +5,10 @@ from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from backend.app.api.deps import get_db, get_current_user
-from backend.app.core.security import verify_password, create_access_token
+from backend.app.core.security import verify_password, create_access_token, hash_password
 from backend.app.crud.user import get_user_by_email_or_username, create_user
 from backend.app.models.user import User
-from backend.app.schemas.user import UserCreate, UserResponse
+from backend.app.schemas.user import UserCreate, UserResponse, PasswordChange
 
 auth_router = APIRouter(tags=["auth"])
 
@@ -34,6 +34,8 @@ def login (
 def me(current_user: User = Depends(get_current_user)):
     return {
         "user_id": current_user.user_id,
+        "first_name": current_user.first_name,
+        "last_name": current_user.last_name,
         "username": current_user.username,
         "email": current_user.email,
 
@@ -50,3 +52,16 @@ def register(
         raise HTTPException(status_code=401, detail="Username already taken")
 
     return create_user(db, payload)
+
+#Allowing the user to change their password
+@auth_router.put("/me/password")
+def change_password(payload: PasswordChange, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    if not verify_password(payload.current_password, str(current_user.password)):
+        raise HTTPException(status_code=400, detail="Current password id incorrect!")
+
+    current_user.password = hash_password(payload.new_password)
+    db.commit()
+    return{"details": "Password changed successfully!"}
+
+
+
