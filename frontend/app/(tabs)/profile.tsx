@@ -38,10 +38,10 @@ export default function ProfileScreen() {
 
     //Password legnth requirnment
     //TODO: change the requirnment to at least 8 characters
-    if (newPassword.length > 4) {
-      setPasswordError("New password must be at least 4 characters!")
-      return;
-    }
+    // if (newPassword.length > 4) {
+    //   setPasswordError("New password must be at least 4 characters!")
+    //   return;
+    // }
     try {
       setPasswordError(null);
       setPasswordSuccess(null);
