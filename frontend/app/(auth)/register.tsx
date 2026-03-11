@@ -83,7 +83,7 @@ export default function RegisterScreen() {
 
         <View style={registerStyles.card}>
           <Text style={registerStyles.title}>Create Account</Text>
-          <Text style={registerStyles.subtitle}>Sign up to get started</Text>
+          <Text style={registerStyles.subtitle}>Sign up to get started!</Text>
 
           {fields.map(({ field, placeholder, secure }) => (
             <View key={field}>
