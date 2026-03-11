@@ -1,6 +1,8 @@
-import { StyleSheet } from "react-native"
+import { Dimensions, StyleSheet } from "react-native"
 import { colors } from "./colors"
 
+
+const { height } = Dimensions.get("window");
 
 
 export const loginStyles = StyleSheet.create({
@@ -9,23 +11,61 @@ export const loginStyles = StyleSheet.create({
   //Background
   container: {
     flex: 1,
-    justifyContent: "center",
-    padding: 24,
-    gap: 12,
+    // justifyContent: "center",
+    // padding: 24,
+    // gap: 12,
     backgroundColor: colors.background,
+  },
+
+
+  topHalf: {
+    height: height * 0.4,
+    backgroundColor: colors.primary01,
+    justifyContent: "flex-end",
+    alignItems: "center",
+    padding: 24,
+  },
+
+
+  bottomHalf: {
+    flex: 1,
+    backgroundColor: colors.primary02
+  },
+
+
+  //Login Card 
+  card: {
+    position: "absolute",
+    top: height * 0.25,
+    left: 24,
+    right: 24,
+    backgroundColor: colors.primary01,
+    borderRadius: 24,
+    padding: 28,
+    gap: 16,
+    shadowColor: colors.authCardShadow,
+    shadowOffset: { width: 0, height: 8 },
+    shadowRadius: 12,
+    elevation: 10,
+    // backgroundColor: colors.authCard,
+    // borderRadius: 24,
+    // padding: 28,
+    // gap: 16,
   },
 
   //Login Title 
   title: {
     fontSize: 28,
     fontWeight: "bold",
-    color: colors.primary01,
-    marginBottom: 8,
+    color: colors.genralWhite,
+    textAlign: "center",
+    marginBottom: 4,
   },
 
 
   //Smaller text
   subtitle: {
+    textAlign: "center",
     fontSize: 14,
     color: colors.textSecondary,
     marginBottom: 16,

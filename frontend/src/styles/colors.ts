@@ -12,6 +12,8 @@ export const colors = {
   textPrimary: "#0f2044",
   textSecondary: "#6b7280",
   textBlack: "#000000",
+  authCard: "#1a3158",
+  authCardShadow: "000",
 
 
   danger: "#FF0000",

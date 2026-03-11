@@ -47,49 +47,60 @@ export default function LoginScreen() {
       style={loginStyles.container}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <Text style={loginStyles.title}>Welcome Back Spartan</Text>
-      <Text style={loginStyles.subtitle}>Sign In Spartan!</Text>
+      <View style={loginStyles.topHalf} />
+      <View style={loginStyles.bottomHalf} />
 
-      <TextInput
-        style={loginStyles.input}
-        placeholder="Email or Username"
-        placeholderTextColor={colors.textSecondary}
-        autoCapitalize="none"
-        autoCorrect={false}
-        value={identifier}
-        onChangeText={setIdentifier}
-      />
+      <View style={loginStyles.card}>
+        <Text style={loginStyles.title}>Welcome Back Spartan!</Text>
+        <Text style={loginStyles.subtitle}>Sign In Spartan!</Text>
 
-      <TextInput
-        style={loginStyles.input}
-        placeholder="Password"
-        placeholderTextColor={colors.textSecondary}
-        secureTextEntry
-        autoCapitalize="none"
-        value={password}
-        onChangeText={setPassword}
-      />
 
-      {error && <Text style={loginStyles.errorText}>{error}</Text>}
-      {success && <Text style={loginStyles.successText}>{success}</Text>}
 
-      <TouchableOpacity
-        style={loginStyles.primaryButton}
-        onPress={handleLogin}
-        disabled={loading}
-      >
-        {loading ? (
-          <ActivityIndicator color={colors.genralWhite} />
-        ) : (
-          <Text style={loginStyles.primaryButtonText}>Log In</Text>
-        )}
-      </TouchableOpacity>
+        <View>
+          <TextInput
+            style={loginStyles.input}
+            placeholder="Email or Username"
+            placeholderTextColor={colors.textSecondary}
+            autoCapitalize="none"
+            autoCorrect={false}
+            value={identifier}
+            onChangeText={setIdentifier}
+          />
+        </View>
 
-      <TouchableOpacity style={loginStyles.linkButton} onPress={() => router.push("/(auth)/register")}>
-        <Text style={loginStyles.linkText}>
-          Don't have an account? Register
-        </Text>
-      </TouchableOpacity>
+        <View>
+          <TextInput
+            style={loginStyles.input}
+            placeholder="Password"
+            placeholderTextColor={colors.textSecondary}
+            secureTextEntry
+            autoCapitalize="none"
+            value={password}
+            onChangeText={setPassword}
+          />
+        </View>
+
+        {error && <Text style={loginStyles.errorText}>{error}</Text>}
+        {success && <Text style={loginStyles.successText}>{success}</Text>}
+
+        <TouchableOpacity
+          style={loginStyles.primaryButton}
+          onPress={handleLogin}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator color={colors.genralWhite} />
+          ) : (
+            <Text style={loginStyles.primaryButtonText}>Log In</Text>
+          )}
+        </TouchableOpacity>
+
+        <TouchableOpacity style={loginStyles.linkButton} onPress={() => router.push("/(auth)/register")}>
+          <Text style={loginStyles.linkText}>
+            Don't have an account? Register
+          </Text>
+        </TouchableOpacity>
+      </View>
     </KeyboardAvoidingView>
   );
 }
