@@ -14,6 +14,9 @@ export const colors = {
   textBlack: "#000000",
   authCard: "#1a3158",
   authCardShadow: "000",
+  registerColor: "#a0aec0",
+  // registerColorInput: "#1a3158",
+  border01: "#2d4f8a",
 
 
   danger: "#FF0000",
