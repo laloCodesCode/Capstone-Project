@@ -20,5 +20,6 @@ export const colors = {
   
   
     danger: "#FF0000",
-    sucess: "#16a34a",
+    success: "#16a34a",
+    success2: "##FFFFFF",
   };
