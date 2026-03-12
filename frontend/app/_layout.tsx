@@ -1,24 +1,18 @@
-//Whole App entry point
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { router, Slot } from "expo-router";
 import { AuthProvider, useAuth } from "../src/context/AuthContext";
 
 function RootLayoutNav() {
   const { user, loading } = useAuth();
-  const [welcomed, setWelcomed] = useState(false);
 
   useEffect(() => {
     if (loading) return;
-    if (!welcomed) {
-      router.replace("/");
-      return;
-    }
     if (user) {
       router.replace("/(tabs)");
     } else {
-      router.replace("/(auth)/login");
+      router.replace("/(auth)/welcome");
     }
-  }, [user, loading, welcomed]);
+  }, [user, loading]);
 
   return <Slot />;
 }
