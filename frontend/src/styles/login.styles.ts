@@ -45,12 +45,9 @@ export const loginStyles = StyleSheet.create({
     gap: 16,
     shadowColor: colors.authCardShadow,
     shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.3,
     shadowRadius: 12,
     elevation: 10,
-    // backgroundColor: colors.authCard,
-    // borderRadius: 24,
-    // padding: 28,
-    // gap: 16,
   },
 
   //Login Title 
