@@ -76,7 +76,7 @@ export const loginStyles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     fontSize: 16,
-    color: colors.textPrimary
+    color: colors.genralWhite,
 
   },
 
