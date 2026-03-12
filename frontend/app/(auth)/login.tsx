@@ -51,7 +51,7 @@ export default function LoginScreen() {
       <View style={loginStyles.bottomHalf} />
 
       <View style={loginStyles.card}>
-        <Text style={loginStyles.title}>Welcome Back Spartan!</Text>
+        <Text style={loginStyles.title}>Welcome Back Spartan</Text>
         <Text style={loginStyles.subtitle}>Sign In Spartan!</Text>
 
 

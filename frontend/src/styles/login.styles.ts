@@ -82,7 +82,7 @@ export const loginStyles = StyleSheet.create({
 
   //Button and their text
   primaryButton: {
-    backgroundColor: colors.primary01,
+    backgroundColor: colors.primary02,
     padding: 14,
     borderRadius: 8,
     alignItems: "center" as const,
@@ -91,7 +91,7 @@ export const loginStyles = StyleSheet.create({
   },
 
   primaryButtonText: {
-    color: colors.genralWhite,
+    color: colors.primary01,
     fontWeight: "600",
     fontSize: 16,
   },
