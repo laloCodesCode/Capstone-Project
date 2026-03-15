@@ -24,11 +24,20 @@ def create_item_listing_endpoint(
 # Route to read an item listing by its UUID
 @router.get("/{item_listing_id}", response_model=Item_ListingOut)
 def read_item_listing(item_listing_id: uuid.UUID, db: Session = Depends(get_db)):
-    db_item_listing = crud_item_listing.get_listing(db, item_listing_id)
+    db_item_listing = crud_item_listing.get_listing(db=db, listing_id=item_listing_id)
     if not db_item_listing:
         raise HTTPException(status_code=404, detail="Item listing not found!")
     return db_item_listing
 
+
+# Route to read all item listings with pagination
+@router.get("/", response_model=list[Item_ListingOut])
+def read_item_listings(
+    db: Session = Depends(get_db),
+    skip: int = 0,
+    limit: int = 20,
+):
+    return crud_item_listing.list_listings(db=db, skip=skip, limit=limit)
 
 # Route to update an item listing by its UUID
 @router.put("/{item_listing_id}", response_model=Item_ListingOut)

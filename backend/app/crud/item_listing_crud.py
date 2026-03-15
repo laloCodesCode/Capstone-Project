@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Optional
 from uuid import UUID
 
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import select
 
 from backend.app.models.item_listing import ItemListing
@@ -27,20 +27,47 @@ def create_listing(db: Session, *, user_id: UUID, listing_in: Item_ListingCreate
 
 # Get item listing
 def get_listing(db: Session, *, listing_id: UUID) -> Optional[ItemListing]:
-    return db.get(ItemListing, listing_id)
+    return (
+        db.query(ItemListing)
+        .options(
+            joinedload(ItemListing.owner),
+            joinedload(ItemListing.images)
+        )
+        .filter(ItemListing.item_listing_id == listing_id)
+        .first()
+    )
 
 
 # List all item listings
-def list_listings(db: Session, *, skip: int = 0, limit: int = 20, active_only: bool = True, user_id: Optional[UUID] = None,) -> list[Item_Listing]:
-    stmt = select(ItemListing)
+def list_listings(
+    db: Session,
+    *,
+    skip: int = 0,
+    limit: int = 20,
+    active_only: bool = True,
+    user_id: Optional[UUID] = None,
+) -> list[ItemListing]:
+    query = (
+        db.query(ItemListing)
+        .options(
+            joinedload(ItemListing.owner),
+            joinedload(ItemListing.images)
+        )
+    )
+
     if active_only:
-        stmt = stmt.where(ItemListing.is_active == True)
+        query = query.filter(ItemListing.is_active == True)
+
     if user_id:
-        stmt = stmt.where(ItemListing.user_id == user_id)
+        query = query.filter(ItemListing.user_id == user_id)
 
-    stmt = stmt.order_by(ItemListing.createdAt.desc()).offset(skip).limit(limit)
-    return list(db.execute(stmt).scalars().all())
-
+    return (
+        query
+        .order_by(ItemListing.created_at.desc())
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
 
 # Update item listing
 def update_listing(db: Session, *, listing: ItemListing, listing_in: Item_ListingUpdate,) -> ItemListing:

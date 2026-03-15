@@ -62,4 +62,55 @@ export const itemService = {
 
         return res.json();
     },
+
+
+    getAllItems: async (): Promise<ItemResponse[]> => {
+        const res = await fetch(`${BASE_URL}/item-listings/`, {
+          method: "GET",
+        });
+      
+        if (!res.ok) {
+          const errText = await res.text();
+          throw new Error(errText || "Failed to fetch item listings");
+        }
+      
+        return res.json() as Promise<ItemResponse[]>;
+      },
+
+    // Get item listing by ID
+    getItemById: async (itemId: string): Promise<ItemResponse> => {
+        const res = await fetch(`${BASE_URL}/item-listings/${itemId}/`, {
+            method: "GET",
+        });
+
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.detail || "Failed to fetch item listing");
+        }
+
+        return res.json() as Promise<ItemResponse>;
+    },
+
+    // Get item listings for current user
+    getMyItems: async (): Promise<ItemResponse[]> => {
+        const token = await SecureStore.getItemAsync("token");
+
+        if (!token) {
+            throw new Error("No authentication token found");
+        }
+
+        const res = await fetch(`${BASE_URL}/item-listings/my/`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.detail || "Failed to fetch your item listings");
+        }
+
+        return res.json() as Promise<ItemResponse[]>;
+    },
 };

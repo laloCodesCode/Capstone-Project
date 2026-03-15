@@ -1,19 +1,56 @@
-import { Text, View, StyleSheet } from "react-native";
-import { Card } from "../../src/components/item_listing";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import ItemListingCard from "../../src/components/itemListingCard";
+import { itemService } from "../../src/services/item";
+import { ItemResponse } from "../../src/types/item";
 
 export default function HomeScreen() {
+  const [items, setItems] = useState<ItemResponse[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  console.log("HOME SCREEN IS RENDERING");
+
+  useEffect(() => {
+    const loadItems = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const data = await itemService.getAllItems();
+        setItems(data);
+      } catch (err: any) {
+        setError(err.message || "Failed to load items");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadItems();
+  }, []);
+
+  if (loading) {
+    return (
+      <View>
+        <ActivityIndicator />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View>
+        <Text>{error}</Text>
+      </View>
+    );
+  }
+
   return (
-    <View style={styles.container}>
-      <Card />
-      <Card />
-      <Card />
-    </View>
+    <FlatList
+      data={items}
+      keyExtractor={(item) => item.item_listing_id}
+      renderItem={({ item }) => <ItemListingCard item={item} />}
+      ListEmptyComponent={<Text>No items listed yet.</Text>}
+    />
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginVertical: 20,
-    marginHorizontal: 20,
-  },
-});
