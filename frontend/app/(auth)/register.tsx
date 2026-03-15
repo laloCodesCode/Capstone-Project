@@ -8,10 +8,14 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Dimensions,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { useAuth } from "../../src/context/AuthContext";
 import { UserCreate } from "../../src/types/auth";
+import { registerStyles } from "../../src/styles/register.styles";
+import { colors } from "../../src/styles/colors";
+const { height } = Dimensions.get("window");
 
 export default function RegisterScreen() {
   const { register } = useAuth();
@@ -52,62 +56,74 @@ export default function RegisterScreen() {
     placeholder: string;
     secure?: boolean;
   }[] = [
-    { field: "first_name", placeholder: "First Name" },
-    { field: "last_name", placeholder: "Last Name" },
-    { field: "email", placeholder: "Email" },
-    { field: "username", placeholder: "Username" },
-    { field: "password", placeholder: "Password", secure: true },
-  ];
+      { field: "first_name", placeholder: "First Name" },
+      { field: "last_name", placeholder: "Last Name" },
+      { field: "email", placeholder: "Email" },
+      { field: "username", placeholder: "Username" },
+      { field: "password", placeholder: "Password", secure: true },
+    ];
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1 }}
+      style={registerStyles.container}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <View style={{ flex: 1, justifyContent: "center", padding: 24, gap: 12 }}>
-        <Text>Create Account</Text>
 
-        {fields.map(({ field, placeholder, secure }) => (
-          <TextInput
-            key={field}
-            style={{
-              borderWidth: 1,
-              borderColor: "#ccc",
-              padding: 10,
-              borderRadius: 6,
-            }}
-            placeholder={placeholder}
-            autoCapitalize="none"
-            secureTextEntry={secure}
-            value={form[field]}
-            onChangeText={(val) => update(field, val)}
-          />
-        ))}
-
-        {error && <Text style={{ color: "red" }}>{error}</Text>}
-
-        <TouchableOpacity
-          style={{
-            backgroundColor: "#4F46E5",
-            padding: 14,
-            borderRadius: 8,
-            alignItems: "center",
-          }}
-          onPress={handleRegister}
-          disabled={loading}
-        >
-          {loading ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={{ color: "#fff", fontWeight: "600" }}>Register</Text>
-          )}
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => router.push("/(auth)/login")}>
-          <Text style={{ textAlign: "center", color: "#4F46E5" }}>
-            Already have an account? Log in
-          </Text>
-        </TouchableOpacity>
+      <View style={{ flex: 1 }}>
+        <View style={registerStyles.topHalf} />
+        <View style={registerStyles.bottomHalf} />
       </View>
+
+
+
+      <ScrollView
+        style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
+        contentContainerStyle={{ paddingTop: height * 0.12, paddingHorizontal: 28, paddingBottom: 40 }}
+        showsVerticalScrollIndicator={false}
+      >
+
+        <View style={registerStyles.card}>
+          <Text style={registerStyles.title}>Create Account</Text>
+          <Text style={registerStyles.subtitle}>Sign up to get started!</Text>
+
+          {fields.map(({ field, placeholder, secure }) => (
+            <View key={field}>
+              <Text style={registerStyles.inputLabel}>{placeholder}</Text>
+              <TextInput
+                style={registerStyles.input}
+                placeholder={`Enter your ${placeholder.toLocaleLowerCase()}`}
+                placeholderTextColor="#a0aec0"
+                autoCapitalize="none"
+                secureTextEntry={secure}
+                value={form[field]}
+                onChangeText={(val) => update(field, val)}
+              />
+            </View>
+          ))}
+
+          {error && <Text style={registerStyles.errorText}>{error}</Text>}
+
+
+
+
+          <TouchableOpacity
+            style={registerStyles.primaryButton}
+            onPress={handleRegister}
+            disabled={loading}
+          >
+            {loading
+              ? <ActivityIndicator color={colors.primary01} />
+              : <Text style={registerStyles.primaryButtonText}>Register</Text>
+            }
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={registerStyles.linkButton}
+            onPress={() => router.push("/(auth)/login")}
+          >
+            <Text style={registerStyles.linkText}>Already have an account? Log in</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 }
