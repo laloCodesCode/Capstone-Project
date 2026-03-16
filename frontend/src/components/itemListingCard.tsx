@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View, Pressable } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import { colors } from "../styles/colors";
+import { itemStyles } from "../styles/item.styles";
+import { router } from "expo-router";
+
+
 
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -44,6 +48,9 @@ export default function ItemListingCard({ item }: ItemListingProps) {
       ? `${BASE_URL}/item-images/${primaryImage.image_id}/download?item_listing_id=${primaryImage.item_listing_id}`
       : null;
 
+
+
+
   console.log("ITEM CARD RENDERING:", item.title);
   console.log("DOWNLOAD URL:", downloadUrl);
 
@@ -71,15 +78,26 @@ export default function ItemListingCard({ item }: ItemListingProps) {
           <Text style={styles.ownerText}>{item.owner.email}</Text>
         </View>
       )}
+
+      <Pressable
+        style={styles.detailsButton}
+        onPress={() => router.push(`/item/${item.item_listing_id}`)}
+      >
+        <Text style={styles.detailsButtonText}>View Details</Text>
+      </Pressable>
+
+
+
+
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: colors.genralWhite,
-    borderRadius: 12,
-    padding: 16,
+    backgroundColor: '#ffb71d',
+    borderRadius: 24,
+    padding: 15,
     marginBottom: 16,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
@@ -89,7 +107,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    height: 180,
+    height: 300,
     borderRadius: 10,
     marginBottom: 12,
   },
@@ -112,11 +130,23 @@ const styles = StyleSheet.create({
   },
   ownerContainer: {
     borderTopWidth: 1,
-    borderTopColor: colors.border,
+    borderTopColor: "#0f2044",
     paddingTop: 8,
   },
   ownerText: {
     fontSize: 13,
     color: colors.textSecondary,
+  },
+
+  detailsButton: {
+    marginTop: 12,
+    backgroundColor: colors.primary01,
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  detailsButtonText: {
+    color: "#fff",
+    fontWeight: "600",
   },
 });

@@ -3,13 +3,14 @@ import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import ItemListingCard from "../../src/components/itemListingCard";
 import { itemService } from "../../src/services/item";
 import { ItemResponse } from "../../src/types/item";
+import { postStyles } from "../../src/styles/post.styles";
+
 
 export default function HomeScreen() {
   const [items, setItems] = useState<ItemResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  console.log("HOME SCREEN IS RENDERING");
 
   useEffect(() => {
     const loadItems = async () => {

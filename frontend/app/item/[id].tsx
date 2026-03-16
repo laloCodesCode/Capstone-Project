@@ -6,17 +6,35 @@ import {
   StyleSheet,
   Text,
   View,
+  Pressable
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
+import * as SecureStore from "expo-secure-store";
+
 import { itemService } from "../../src/services/item";
 import { ItemResponse } from "../../src/types/item";
 import { colors } from "../../src/styles/colors";
+import { router } from "expo-router";
+
+
+const BASE_URL = process.env.EXPO_PUBLIC_API_URL;
 
 export default function ItemDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+
   const [item, setItem] = useState<ItemResponse | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const loadToken = async () => {
+      const savedToken = await SecureStore.getItemAsync("token");
+      setToken(savedToken);
+    };
+
+    loadToken();
+  }, []);
 
   useEffect(() => {
     const loadItem = async () => {
@@ -60,10 +78,29 @@ export default function ItemDetailsScreen() {
   const primaryImage =
     item.images?.find((img) => img.is_primary) || item.images?.[0];
 
+  const downloadUrl =
+    primaryImage
+      ? `${BASE_URL}/item-images/${primaryImage.image_id}/download?item_listing_id=${primaryImage.item_listing_id}`
+      : null;
+
+  console.log("TOKEN:", token);
+  console.log("DOWNLOAD URL:", downloadUrl);
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {primaryImage && (
-        <Image source={{ uri: primaryImage.file_url }} style={styles.image} />
+      {downloadUrl && token ? (
+        <Image
+          source={{
+            uri: downloadUrl,
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }}
+          style={styles.image}
+          resizeMode="cover"
+        />
+      ) : (
+        <Text style={styles.text}>No image available</Text>
       )}
 
       <View style={styles.card}>
@@ -80,16 +117,33 @@ export default function ItemDetailsScreen() {
             <Text style={styles.text}>Email: {item.owner.email}</Text>
           </>
         )}
+
+        <Pressable
+          style={styles.contactButton}
+          onPress={() => router.back()}
+        >
+          <Text style={styles.contactButtonText}>Contact Seller</Text>
+        </Pressable>
+
+
       </View>
+
+      <Pressable
+        style={styles.itemPageButton}
+        onPress={() => router.back()}
+      >
+        <Text style={styles.itemPageButtonText}>Go Back</Text>
+      </Pressable>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
-    backgroundColor: colors.background,
+    padding: 20,
+    backgroundColor: "#0f2044",
     flexGrow: 1,
+    marginTop: 70,
   },
   centered: {
     flex: 1,
@@ -99,10 +153,10 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   card: {
-    backgroundColor: colors.genralWhite,
+    backgroundColor: "#ffb71d",
     borderRadius: 12,
     padding: 16,
-    marginTop: 16,
+    marginTop: 50,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
@@ -111,7 +165,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    height: 260,
+    height: 300,
     borderRadius: 12,
   },
   title: {
@@ -142,5 +196,31 @@ const styles = StyleSheet.create({
     color: colors.danger,
     textAlign: "center",
     fontSize: 16,
+  },
+  itemPageButton: {
+    marginTop: 70,
+    backgroundColor: colors.primary01,
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  itemPageButtonText: {
+    color: colors.genralWhite,
+    fontSize: 16,
+    fontWeight: "600",
+  },
+
+  contactButton: {
+    marginTop: 20,
+    backgroundColor: colors.primary01,
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+
+  contactButtonText: {
+    color: colors.primary02,
+    fontSize: 16,
+    fontWeight: "600",
   },
 });
