@@ -26,13 +26,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   //Check for token
-  useEffect(() => {
-    authService.getToken().then((token) => {
-      if (token) setUser({ token });
-      setLoading(false);
-    });
-  }, []);
+  //useEffect(() => {
+  //  authService.getToken().then((token) => {
+ //     if (token) setUser({ token });
+   //   setLoading(false);
+  //  });
+//  }, []);
 
+  useEffect(() => {
+  setUser({ token: "dev-token" });
+  setLoading(false);
+}, []);
   const login = async (identifer: string, password: string): Promise<void> => {
     const token = await authService.login(identifer, password);
     setUser({ token });
