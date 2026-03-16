@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   itemPageButton: {
-    marginTop: 70,
+    marginTop: 30,
     backgroundColor: colors.primary01,
     paddingVertical: 12,
     borderRadius: 8,
