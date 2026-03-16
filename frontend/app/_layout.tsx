@@ -1,4 +1,3 @@
-//Whole App entry point
 import { useEffect } from "react";
 import { router, Slot } from "expo-router";
 import { AuthProvider, useAuth } from "../src/context/AuthContext";
@@ -11,7 +10,7 @@ function RootLayoutNav() {
     if (user) {
       router.replace("/(tabs)");
     } else {
-      router.replace("/(auth)/login");
+      router.replace("/(auth)/welcome");
     }
   }, [user, loading]);
 
