@@ -22,4 +22,6 @@ class Item_ImageOut(Item_ImageBase):
     image_id: UUID
     item_listing_id: UUID
     file_url: str
+    is_primary: bool
     created_at: datetime
+    

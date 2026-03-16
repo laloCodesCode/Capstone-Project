@@ -194,7 +194,7 @@ export const profileStyles = StyleSheet.create({
   },
 
   successText: {
-    color: colors.sucess,
+    color: colors.success,
     fontSize: 13,
   },
 
