@@ -1,34 +1,23 @@
 from fastapi import FastAPI
 
-from backend.app.db import engine
-from backend.app.db.base import Base
-from backend.app.routers import (
-    auth,
-    item_image,
-    message,
-    message_thread,
-    routes_item_listing,
-    routes_reports,
-    routes_user,
-    routes_user_documents,
-)
-
-Base.metadata.create_all(bind=engine)
-
-
-app = FastAPI(title="Capstone Marketplace API")
-
-
-@app.get("/health")
-def health():
-    return {"status": "ok"}
-
-
-app.include_router(message.router)
-app.include_router(message_thread.router)
-app.include_router(routes_item_listing.router)
-app.include_router(routes_reports.router)
-app.include_router(routes_user.router)
-app.include_router(routes_user_documents.router)
-app.include_router(auth.auth_router)
-app.include_router(item_image.router)
+from backend.app.routes.auth import auth_router
+from backend.app.routes.favorites import favorite_router
+from backend.app.routes.listing import listing_router
+from backend.app.routes.message import message_router
+from backend.app.routes.route import router
+from backend.app.routes.category import router as category_router
+from backend.app.routes.listing_image import router as listing_image
+from backend.app.routes.notification import notification_router
+from backend.app.routes.review import review_router
+from backend.app.routes.admin import admin_router
+app = FastAPI()
+app.include_router(router)
+app.include_router(auth_router)
+app.include_router(listing_router)
+app.include_router(category_router)
+app.include_router(message_router)
+app.include_router(favorite_router)
+app.include_router(listing_image)
+app.include_router(notification_router)
+app.include_router(review_router)
+app.include_router(admin_router)
