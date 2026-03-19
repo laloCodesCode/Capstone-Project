@@ -1,47 +1,42 @@
+import datetime
 import uuid
-from datetime import datetime
 
-from sqlalchemy import ForeignKey, DateTime, Text, Index, Boolean
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy.sql import func
 
 from backend.app.db.base import Base
 
 
 class Message(Base):
     __tablename__ = "message"
-
-    message_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    id: Mapped[uuid.UUID] = mapped_column(
+        primary_key=True,
+        default=uuid.uuid4,
     )
-
     thread_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("message_thread.thread_id", ondelete="CASCADE"),
+        ForeignKey("message_thread.id", ondelete="CASCADE"),
+        nullable=False
+
+    )
+    message_user: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("user.id", ondelete="CASCADE"),
+    )
+    body: Mapped[str] = mapped_column(
+        String(200),
         nullable=False,
-        index=True,
+    )
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        default=datetime.datetime.now,
+        nullable=False
     )
 
-    sender_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("user.user_id", ondelete="CASCADE"),
-        nullable=False,
-        index=True,
+    thread: Mapped["MessageThread"] = relationship(
+        "MessageThread",
+        back_populates="messages",
     )
 
-    body: Mapped[str] = mapped_column(Text, nullable=False)
-
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now(), nullable=False
+    sender: Mapped["User"] = relationship(
+        "User",
+        back_populates="sent_messages",
+        foreign_keys=[message_user],
     )
-    is_deleted: Mapped[bool] = mapped_column(Boolean,nullable=False, default=False, index=True)
-
-    deleted_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
-
-    __table_args__ = (
-        Index("ix_message_thread_created", "thread_id", "created_at"),
-    )
-
-    thread = relationship("MessageThread", back_populates="messages")
-    sender = relationship("User", back_populates="messages_sent")

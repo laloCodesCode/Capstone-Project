@@ -1,52 +1,26 @@
-
+from datetime import datetime
 from uuid import UUID
-from pydantic import BaseModel, EmailStr, StrictFloat
 
-
-class UserCreate(BaseModel):
-    first_name: str
-    last_name: str
-    email: EmailStr
-    username: str
-    password: str
+from pydantic import BaseModel, EmailStr, ConfigDict, field_validator
 
 
 class UserResponse(BaseModel):
 
-    user_id: UUID
-    first_name: str
-    last_name: str
-    email: EmailStr
-    role: str
+    id: UUID
+    school_email: EmailStr
     username: str
-    role: str
-
-# Password Change logic
-class PasswordChange(BaseModel):
-    current_password: str
-    new_password: str
-
-   # Helper inner config class
-    class Config:
-        orm_mode = True
+    phone_number: str | None = None
+    is_email_verified: bool
+    is_phone_verified: bool
+    created_at: datetime
 
 
 
 
-
-
-
-"""
-Schemas to be implemented from splitting UserResponse:
-    > UserPublic: Front-Facing Views
-    > UserSelf: Authenticated Views (user logged in)
-    > UserAdmin: Admin Panel
-"""
-class UserPublic(BaseModel):
-    pass
-
-class UserSelf(BaseModel):
-    pass
-
-class UserAdmin(BaseModel):
-    pass
+#add later
+    #@field_validator("school_email")
+    #@classmethod
+    #def validate_uncg_email(cls, value: str):
+    #    if not value.lower().endswith("@uncg.edu"):
+    #       raise ValueError("Must register with a UNCG email address")
+    #    return value
