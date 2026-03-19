@@ -48,3 +48,5 @@ class Listing(Base):
         "Category",
         back_populates="listings"
     )
+
+

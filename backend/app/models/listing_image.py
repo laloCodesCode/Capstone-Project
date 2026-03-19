@@ -2,7 +2,7 @@ import datetime
 import uuid
 
 from sqlalchemy import ForeignKey, String
-from sqlalchemy.orm import mapped_column, Mapped
+from sqlalchemy.orm import mapped_column, Mapped, relationship
 
 from backend.app.db.base import Base
 
@@ -25,3 +25,5 @@ class ListingImage(Base):
         default=datetime.datetime.utcnow,
         nullable=False,
     )
+
+    listing = relationship("Listing", back_populates="images")

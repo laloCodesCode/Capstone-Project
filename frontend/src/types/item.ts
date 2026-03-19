@@ -3,28 +3,12 @@ export interface PostItem {
     title: string;
     description: string;
     price: number;
-}
-
-export interface ItemImage {
-    image_id: string;
-    item_listing_id: string;
-    file_url: string;
-    is_primary: boolean;
+    condition: string;
+    status?: string;
+    location: string;
+    category_id: string;
     created_at?: string;
-  }
 
-
-export interface ItemResponse {
-    item_listing_id: string;
-    title: string;
-    description: string;
-    price: number;
-    is_active: boolean;
-    created_at: string;
-    updated_at: string;
-    user_id: string;
-    owner?: ItemOwner;
-    images?: ItemImage[];
 }
 
 export interface ItemOwner {
@@ -33,3 +17,34 @@ export interface ItemOwner {
     first_name: string;
     last_name: string;
 }
+
+
+export interface ItemImage {
+    id: string;
+    listing_id: string;
+    image_url: string;
+    is_primary: boolean;
+    created_at?: string;
+  }
+
+
+export interface ItemResponse {
+    id: string;
+    title: string;
+    description: string;
+    price: number;
+    condition: string;
+    status: string;
+    location: string;
+    category_id: string | null;
+    created_at: string;
+    updated_at: string;
+    seller_id: string;
+    owner?: ItemOwner;
+    images?: ItemImage[];
+    category?: {
+    id: string;
+    name: string;
+  };
+}
+

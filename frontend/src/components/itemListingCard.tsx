@@ -4,66 +4,28 @@ import * as SecureStore from "expo-secure-store";
 import { colors } from "../styles/colors";
 import { itemStyles } from "../styles/item.styles";
 import { router } from "expo-router";
+import { ItemResponse } from "../types/item";
 
 
 
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL;
 
+
 type ItemListingProps = {
-  item: {
-    item_listing_id: string;
-    title: string;
-    description: string;
-    price: number | string;
-    owner?: {
-      first_name: string;
-      email: string;
-    };
-    images?: {
-      image_id: string;
-      item_listing_id: string;
-      file_url: string;
-      is_primary: boolean;
-    }[];
-  };
+  item: ItemResponse;
 };
 
 export default function ItemListingCard({ item }: ItemListingProps) {
-  const [token, setToken] = useState<string | null>(null);
-
-  useEffect(() => {
-    const loadToken = async () => {
-      const savedToken = await SecureStore.getItemAsync("token");
-      setToken(savedToken);
-    };
-
-    loadToken();
-  }, []);
-
   const primaryImage =
     item.images?.find((img) => img.is_primary) || item.images?.[0];
 
-  const downloadUrl =
-    primaryImage && token
-      ? `${BASE_URL}/item-images/${primaryImage.image_id}/download?item_listing_id=${primaryImage.item_listing_id}`
-      : null;
-
-
-
-
-  console.log("ITEM CARD RENDERING:", item.title);
-  console.log("DOWNLOAD URL:", downloadUrl);
+  const imageUrl = primaryImage?.image_url ?? null;
 
   return (
     <View style={styles.card}>
-      {downloadUrl && (
+      {imageUrl && (
         <Image
-          source={{
-            uri: downloadUrl,
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }}
+          source={{ uri: imageUrl }}
           style={styles.image}
         />
       )}
@@ -74,21 +36,19 @@ export default function ItemListingCard({ item }: ItemListingProps) {
 
       {item.owner && (
         <View style={styles.ownerContainer}>
-          <Text style={styles.ownerText}>Posted by: {item.owner.first_name}</Text>
+          <Text style={styles.ownerText}>
+            Posted by: {item.owner.first_name}
+          </Text>
           <Text style={styles.ownerText}>{item.owner.email}</Text>
         </View>
       )}
 
       <Pressable
         style={styles.detailsButton}
-        onPress={() => router.push(`/item/${item.item_listing_id}`)}
+        onPress={() => router.push(`/item/${item.id}`)}
       >
         <Text style={styles.detailsButtonText}>View Details</Text>
       </Pressable>
-
-
-
-
     </View>
   );
 }

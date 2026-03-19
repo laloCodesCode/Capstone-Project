@@ -2,7 +2,7 @@ import datetime
 import uuid
 
 from sqlalchemy import String
-from sqlalchemy.orm import mapped_column, Mapped, MappedColumn
+from sqlalchemy.orm import mapped_column, Mapped, MappedColumn, relationship
 
 from backend.app.db.base import Base
 
