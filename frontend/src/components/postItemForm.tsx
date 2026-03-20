@@ -11,7 +11,7 @@ import {
     View,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-
+import { Picker } from "@react-native-picker/picker";
 import { itemService } from "../services/item";
 import CameraCapture from "./cameraCapture";
 import { postStyles } from "../styles/post.styles";
@@ -21,6 +21,8 @@ export default function PostItemForm() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState("");
+    const [condition, setCondition] = useState("good");
+    const [location, setLocation] = useState("");
     const [image, setImage] = useState<any>(null);
     const [openCamera, setOpenCamera] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
@@ -33,25 +35,40 @@ export default function PostItemForm() {
             return;
         }
 
+        const parsedPrice = parseFloat(price);
+
+    if (isNaN(parsedPrice)) {
+      setErrorMessage("Please enter a valid price");
+      return;
+    }
+
+
+
         try {
             setSuccessMessage("");
             setErrorMessage("");
             setLoading(true);
 
-            const item = await itemService.createItem({
-                title,
-                description,
-                price: parseFloat(price),
-            });
+            const itemPayload = {
+              title,
+              description,
+              price: parsedPrice,
+              condition,
+              location,
+              category_id: categoryId ? categoryId : null,
+            };
+
+            const item = await itemService.createItem(itemPayload);
+
 
             if (image) {
                 const imageFile = {
                     uri: image.uri,
-                    name: "item.jpg",
-                    type: "image/jpeg",
+                    name: image.filename || "item.jpg",
+                    type: image.mimeType || "image/jpeg",
                 };
 
-                await itemService.uploadImage(item.item_listing_id, imageFile, true);
+                await itemService.uploadImage(item.id, imageFile, true);
             }
 
             setSuccessMessage("Item posted successfully!");
