@@ -12,6 +12,7 @@ import {
   MeResponse,
   MessageResponse,
 } from "../types/auth";
+import { captureOwnerStack } from "react";
 
 // Untracked env vars this uses my PERSONAL IP
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL;
@@ -170,5 +171,44 @@ export const authService = {
   },
 
   //Get specific user information
-  getMe: async,
+  getMe: async (): Promise<MeResponse> => {
+    const token = await SecureStore.getItemAsync("token");
+
+    const res = await fetch(`${BASE_URL}/auth/method`, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    //The session 60 minute was reached
+    if (res.status == 401) {
+      await SecureStore.deleteItemAsync("token");
+      throw new Error("Session Expired!");
+    }
+
+    //Failed to laod the user profile -> itermitten error that can occur !!
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.detail || "Failed to fetch your profile!");
+    }
+
+    return res.json() as Promise<MeResponse>;
+  },
+
+  //In the case the user needs the verification email resent to their @ucng.edu inbox
+  resendVerification: async (): Promise<MessageResponse> => {
+    const token = await SecureStore.getItemAsync("token");
+
+    const res = await fetch(`${BASE_URL}/auth/resend-verification`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    //The resend fails
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.detail || "Failed to resend verification email!");
+    }
+
+    return res.json() as Promise<MessageResponse>;
+  },
 };
