@@ -1,38 +1,76 @@
 // interfaces for login, registration and token generation
-export interface UserCreate {
-  first_name: string;
-  last_name: string;
-  email: string;
+// export interface UserCreate {
+//   first_name: string;
+//   last_name: string;
+//   email: string;
+//   username: string;
+//   password: string;
+// }
+// export interface UserResponse {
+//   user_id: string;
+//   first_name: string;
+//   last_name: string;
+//   email: string;
+//   username: string;
+//   role: string;
+// }
+// export interface TokenResponse {
+//   access_token: string;
+//   token_type: string;
+// }
+// export interface AuthUser {
+//   token: string;
+// }
+//
+// // interface for user profile
+// export interface MeResponse {
+//   user_id: string;
+//   first_name: string;
+//   last_name: string;
+//   username: string;
+//   email: string;
+// }
+//
+// //Password Change
+// export interface PasswordChange {
+//   current_password: string;
+//   new_password: string;
+// }
+
+/*
+ * New Interfaces for the updated backend
+ * I will take out the olds ones once the new backend is fully tested
+ *
+ * */
+
+export interface UserRegister {
   username: string;
+  school_email: string;
+  phone_number: string;
   password: string;
 }
+
 export interface UserResponse {
-  user_id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
+  id: string;
   username: string;
-  role: string;
+  school_email: string;
+  phone_number: string | null;
+  is_email_verified: boolean;
+  is_phone_verified: boolean;
+  created_at: string;
 }
+
 export interface TokenResponse {
   access_token: string;
   token_type: string;
 }
-export interface AuthUser {
-  token: string;
-}
 
-// interface for user profile
 export interface MeResponse {
   user_id: string;
-  first_name: string;
-  last_name: string;
   username: string;
-  email: string;
+  school_email: string;
 }
 
-//Password Change
-export interface PasswordChange {
-  current_password: string;
-  new_password: string;
+export interface MessageResponse {
+  message: string;
 }

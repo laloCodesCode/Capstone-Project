@@ -1,30 +1,28 @@
-import { StyleSheet, Dimensions, ScrollView, ImageBackgroundComponent } from "react-native";
+import {
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+  ImageBackgroundComponent,
+} from "react-native";
 import { colors } from "./colors";
 import { Background } from "@react-navigation/elements";
 
-
 const { height } = Dimensions.get("window");
-
-
-
-
 
 export const profileStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.primary01
+    backgroundColor: colors.primary01,
   },
-
 
   topHalf: {
     height: height * 0.3,
-    backgroundColor: colors.primary01
+    backgroundColor: colors.primary01,
   },
-
 
   bottomHalf: {
     flex: 1,
-    backgroundColor: colors.primary02
+    backgroundColor: colors.primary02,
   },
 
   scrollView: {
@@ -41,8 +39,6 @@ export const profileStyles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingBottom: 100,
   },
-
-
 
   //profile/avatar
   avatarContainer: {
@@ -85,9 +81,6 @@ export const profileStyles = StyleSheet.create({
     marginTop: 4,
   },
 
-
-
-
   //Other stuff
   card: {
     backgroundColor: colors.primary01,
@@ -102,7 +95,6 @@ export const profileStyles = StyleSheet.create({
     // elevation: 10,
   },
 
-
   sectionTitle: {
     fontSize: 16,
     fontWeight: "700",
@@ -110,13 +102,9 @@ export const profileStyles = StyleSheet.create({
     marginBottom: 4,
   },
 
-
-
   infoRow: {
     gap: 4,
   },
-
-
 
   infoLabel: {
     fontSize: 11,
@@ -124,7 +112,6 @@ export const profileStyles = StyleSheet.create({
     textTransform: "uppercase",
     letterSpacing: 1,
   },
-
 
   infoValue: {
     fontSize: 16,
@@ -168,8 +155,6 @@ export const profileStyles = StyleSheet.create({
     fontSize: 15,
   },
 
-
-
   dangerButton: {
     backgroundColor: colors.danger,
     borderWidth: 1,
@@ -180,17 +165,15 @@ export const profileStyles = StyleSheet.create({
     marginTop: 4,
   },
 
-
   dangerButtonText: {
     color: colors.danger,
     fontWeight: "600",
     fontSize: 15,
   },
 
-
   errorText: {
     color: colors.danger,
-    fontSize: 13
+    fontSize: 13,
   },
 
   successText: {
@@ -198,31 +181,9 @@ export const profileStyles = StyleSheet.create({
     fontSize: 13,
   },
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  divider: {
+    height: 1,
+    backgroundColor: "#1a3158",
+    marginVertical: 4,
+  },
 });
-

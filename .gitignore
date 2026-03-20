@@ -5,3 +5,11 @@
 .env
 .env*.local
 .idea/
+
+
+
+**/__pycache__/
+*.pyc
+*.pyo
+
+
