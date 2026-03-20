@@ -49,7 +49,7 @@ export default function HomeScreen() {
   return (
     <FlatList
       data={items}
-      keyExtractor={(item) => item.item_listing_id}
+      keyExtractor={(item) => item.id}
       renderItem={({ item }) => <ItemListingCard item={item} />}
       ListEmptyComponent={<Text>No items listed yet.</Text>}
     />

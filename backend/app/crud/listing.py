@@ -1,7 +1,7 @@
 from uuid import UUID
 
 from sqlalchemy import asc, desc, or_
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from backend.app.models import Listing
 from backend.app.schemas.listing import ListingCreate, ListingUpdate
@@ -37,7 +37,10 @@ def get_listings(
         q: str | None = None,
 
 ):
-    query = db.query(Listing)
+    query = db.query(Listing).options(
+        joinedload(Listing.seller),
+        joinedload(Listing.images),
+    )
     if category_id:
         query = query.filter(Listing.category_id == category_id)
 

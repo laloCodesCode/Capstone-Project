@@ -13,7 +13,7 @@ export const itemService = {
             throw new Error("No authentication token found");
         }
 
-        const res = await fetch(`${BASE_URL}/item-listings/`, {
+        const res = await fetch(`${BASE_URL}/listing/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -43,11 +43,11 @@ export const itemService = {
           }
 
         const formData = new FormData();
-        formData.append("item_listing_id", itemId);
+        formData.append("listing_id", itemId);
         formData.append("file", imageFile);
         formData.append("is_primary", String(isPrimary));
 
-        const res = await fetch(`${BASE_URL}/item-images/`, {
+        const res = await fetch(`${BASE_URL}/listing-image/`, {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -65,7 +65,7 @@ export const itemService = {
 
 
     getAllItems: async (): Promise<ItemResponse[]> => {
-        const res = await fetch(`${BASE_URL}/item-listings/`, {
+        const res = await fetch(`${BASE_URL}/listing/`, {
           method: "GET",
         });
       
@@ -79,7 +79,7 @@ export const itemService = {
 
     // Get item listing by ID
     getItemById: async (itemId: string): Promise<ItemResponse> => {
-        const res = await fetch(`${BASE_URL}/item-listings/${itemId}/`, {
+        const res = await fetch(`${BASE_URL}/listing/${itemId}/`, {
             method: "GET",
         });
 
@@ -99,7 +99,7 @@ export const itemService = {
             throw new Error("No authentication token found");
         }
 
-        const res = await fetch(`${BASE_URL}/item-listings/my/`, {
+        const res = await fetch(`${BASE_URL}/listing/me`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`,
