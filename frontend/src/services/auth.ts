@@ -173,11 +173,12 @@ export const authService = {
   //Get specific user information
   getMe: async (): Promise<MeResponse> => {
     const token = await SecureStore.getItemAsync("token");
-
-    const res = await fetch(`${BASE_URL}/auth/method`, {
+    const url = `${BASE_URL}/auth/me`;
+    const res = await fetch(`${BASE_URL}/auth/me`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
+    console.log("getMe URL:", url);
 
     //The session 60 minute was reached
     if (res.status == 401) {
