@@ -11,6 +11,7 @@ from backend.app.crud.message import (
     get_thread_by_id,
     get_thread_by_listing_and_users,
     get_thread_messages,
+    get_user_inbox_threads,
     get_user_threads,
 )
 from backend.app.crud.notification import create_notification
@@ -21,7 +22,9 @@ from backend.app.schemas import (
     MessageResponse,
     ThreadCreate,
     ThreadResponse,
+
 )
+from backend.app.schemas.message import InboxThreadResponse
 
 message_router = APIRouter(prefix="/messages", tags=["messages"])
 
@@ -106,3 +109,11 @@ def send_message(
     )
 
     return create_message(db, thread_id, current_user.id, payload.body)
+
+# inbox routes 
+@message_router.get("/inbox", response_model=list[InboxThreadResponse])
+def get_inbox(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_verified_user),
+):
+    return get_user_inbox_threads(db, current_user.id)

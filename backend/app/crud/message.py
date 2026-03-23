@@ -79,3 +79,42 @@ def create_message(db: Session, thread_id: UUID, user_id: UUID, body: str) -> Me
 
 def get_listing_by_id(db: Session, listing_id: UUID) -> Listing | None:
     return db.query(Listing).filter(Listing.id == listing_id).first()
+
+
+# inbox routes 
+
+def get_user_inbox_threads(db: Session, user_id: UUID):
+    threads = (
+        db.query(MessageThread)
+        .filter(
+            (MessageThread.buyer_id == user_id) | (MessageThread.seller_id == user_id)
+        )
+        .order_by(MessageThread.created_at.desc())
+        .all()
+    )
+
+    results = []
+    
+    for thread in threads:
+        other_user = thread.seller if thread.buyer_id == user_id else thread.buyer
+
+        last_message = (
+            db.query(Message)
+            .filter(Message.thread_id == thread.id)
+            .order_by(Message.created_at.desc())
+            .first()
+        )
+
+        results.append({
+            "id": thread.id,
+            "other_user_id": other_user.id,
+            "other_user_name": other_user.username,
+            "listing_id": thread.listing_id,
+            "last_message": last_message.body if last_message else None,
+            "last_message_at": last_message.created_at if last_message else None,
+            "unread_count": 0,
+        })
+
+    return results
+        
+    
