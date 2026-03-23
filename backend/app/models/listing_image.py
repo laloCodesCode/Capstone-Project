@@ -5,7 +5,6 @@ from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 
 from backend.app.db.base import Base
-from backend.app.models.listing import Listing
 
 
 class ListingImage(Base):

@@ -6,10 +6,8 @@ from .listing_image import ListingImageOut
 
 class ItemSeller(BaseModel):
     id: UUID
-    first_name: str
-    last_name: str
     username: str
-    email: str
+    school_email: str
 
 
 

@@ -13,9 +13,7 @@ export interface PostItem {
 
 export interface ItemSeller {
     username: string;
-    email: string;
-    first_name: string;
-    last_name: string;
+    school_email: string;
 }
 
 

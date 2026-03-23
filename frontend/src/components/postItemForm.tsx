@@ -107,7 +107,6 @@ export default function PostItemForm() {
       setImage(null);
 
       console.log("Item created:", item);
-      console.log("Selected status:", status);
     } catch (error: any) {
       console.error("Error creating item:", error);
       setErrorMessage(error.message || "Failed to post item");

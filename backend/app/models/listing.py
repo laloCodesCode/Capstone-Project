@@ -3,7 +3,6 @@ import uuid
 
 from sqlalchemy import String, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from backend.app.models.listing_image import ListingImage
 from backend.app.models.message_thread import MessageThread
 from backend.app.models.favorite import Favorite
 from backend.app.models.category import Category

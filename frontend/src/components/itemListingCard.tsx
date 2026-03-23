@@ -39,7 +39,9 @@ export default function ItemListingCard({ item }: ItemListingProps) {
 
   console.log("ITEM CARD RENDERING:", item.title);
   console.log("DOWNLOAD URL:", downloadUrl);
-
+  console.log("item.images:", item.images);
+  console.log("primaryImage:", primaryImage);
+  console.log("primaryImage object:", primaryImage);
   return (
     <View style={styles.card}>
       {downloadUrl && (
@@ -60,8 +62,8 @@ export default function ItemListingCard({ item }: ItemListingProps) {
 
       {item.seller && (
         <View style={styles.ownerContainer}>
-          <Text style={styles.ownerText}>Posted by: {item.seller.first_name}</Text>
-          <Text style={styles.ownerText}>{item.seller.email}</Text>
+          <Text style={styles.ownerText}>Posted by: {item.seller.username}</Text>
+          <Text style={styles.ownerText}>{item.seller.school_email}</Text>
         </View>
       )}
 

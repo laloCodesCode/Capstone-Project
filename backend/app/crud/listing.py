@@ -21,8 +21,20 @@ def create_listing(db: Session, listing: ListingCreate, seller_id: UUID) -> List
     db.commit()
     db.refresh(listing)
     return listing
+
+
+
 def get_listing(db:Session, listing_id: UUID):
-    return db.query(Listing).filter(Listing.id == listing_id).first()
+    return (
+        db.query(Listing)
+        .options(
+            joinedload(Listing.seller),
+            joinedload(Listing.images),
+        )
+        .filter(Listing.id == listing_id)
+        .first()
+    )
+
 
 def get_listings(
         db:Session,
@@ -95,4 +107,12 @@ def update_listing(db: Session, listing: Listing, payload: ListingUpdate) -> Lis
     return listing
 
 def get_my_listings(db: Session, seller_id: UUID):
-    return db.query(Listing).filter(Listing.seller_id == seller_id).all()
+    return (
+        db.query(Listing)
+        .options(
+            joinedload(Listing.seller),
+            joinedload(Listing.images),
+        )
+        .filter(Listing.seller_id == seller_id)
+        .all()
+    )
