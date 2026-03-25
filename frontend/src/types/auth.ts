@@ -69,8 +69,54 @@ export interface MeResponse {
   user_id: string;
   username: string;
   school_email: string;
+  is_admin: boolean;
 }
 
 export interface MessageResponse {
   message: string;
+}
+
+//administrator
+export interface AdminUser {
+  id: string;
+  username: string;
+  school_email: string;
+  is_admin: boolean;
+  is_email_verified: boolean;
+  is_banned: boolean;
+}
+
+export interface AdminMessageResponse {
+  message: string;
+}
+
+export interface ListingResponse {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  condtion: string;
+  location: string;
+  status: string;
+  seller_id: string;
+  category_id: string | null;
+  created_at: string;
+}
+
+// export interface ReviewResponse {
+//   id: string;
+//   reviewer_id: string;
+//   reviewed_user_id: string;
+//   rating: number;
+//   comment: string | null;
+//   created_at: string;
+// }
+
+export interface ReviewResponse {
+  id: string;
+  reviewer_id: string;
+  reviewed_user_id: string;
+  rating: number;
+  comment: string | null;
+  created_at: string;
 }
