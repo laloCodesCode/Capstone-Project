@@ -9,13 +9,13 @@ from backend.app.core.email import send_verification_email
 from backend.app.core.security import verify_password
 from backend.app.core.token import (
     create_access_token,
-    decode_access_token,
     create_email_verification_token,
+    decode_access_token,
 )
-from backend.app.crud.user import get_user_by_school_email_or_username, create_user
-from backend.app.db.dependencies import get_db, get_current_user
+from backend.app.crud.user import create_user, get_user_by_school_email_or_username
+from backend.app.db.dependencies import get_current_user, get_db
 from backend.app.models import User
-from backend.app.schemas import UserResponse, UserRegister
+from backend.app.schemas import UserRegister, UserResponse
 
 auth_router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -61,7 +61,8 @@ def login(
         raise HTTPException(
             status_code=403, detail="Please verify your email before logging in."
         )
-
+    if user.is_banned:  # ← add this
+        raise HTTPException(status_code=403, detail="Your account has been banned.")
     token = create_access_token(
         {
             "sub": str(user.id),
@@ -122,4 +123,3 @@ def resend_verification(
     )
 
     return {"message": "Verification email sent"}
-
