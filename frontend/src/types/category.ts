@@ -1,5 +1,5 @@
 export interface CategoryResponse {
     id: string;
     name: string;
-    created_at: string;
-}
+    parent_id?: string | null;
+  }

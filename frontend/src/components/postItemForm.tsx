@@ -25,9 +25,11 @@ export default function PostItemForm() {
   const [price, setPrice] = useState("");
   const [condition, setCondition] = useState("good");
   const [location, setLocation] = useState("");
-  const [categoryId, setCategoryId] = useState("");
+
   const [categories, setCategories] = useState<CategoryResponse[]>([]);
   const [categoriesLoading, setCategoriesLoading] = useState(false);
+  const [selectedParentId, setSelectedParentId] = useState("");
+  const [selectedChildId, setSelectedChildId] = useState("");
 
   const [image, setImage] = useState<any>(null);
   const [openCamera, setOpenCamera] = useState(false);
@@ -35,12 +37,12 @@ export default function PostItemForm() {
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-
   useEffect(() => {
     const loadCategories = async () => {
       try {
         setCategoriesLoading(true);
         const data = await categoryService.getAllCategories();
+        console.log("CATEGORIES FROM API:", data);
         setCategories(data);
       } catch (error: any) {
         console.error("Error loading categories:", error);
@@ -49,15 +51,30 @@ export default function PostItemForm() {
         setCategoriesLoading(false);
       }
     };
-
     loadCategories();
   }, []);
 
+  const parentCategories = categories.filter(
+    (category) => !category.parent_id
+  );
 
+  const childCategories = categories.filter(
+    (category) => category.parent_id === selectedParentId
+  );
+
+  const handleParentChange = (value: string) => {
+    setSelectedParentId(value);
+    setSelectedChildId("");
+  };
 
   const handleSubmit = async () => {
-    if (!title || !description || !price) {
+    if (!title || !description || !price || !location) {
       setErrorMessage("Please fill in all fields");
+      return;
+    }
+
+    if (!selectedParentId || !selectedChildId) {
+      setErrorMessage("Please select a category and subcategory");
       return;
     }
 
@@ -67,8 +84,6 @@ export default function PostItemForm() {
       setErrorMessage("Please enter a valid price");
       return;
     }
-
-
 
     try {
       setSuccessMessage("");
@@ -81,11 +96,10 @@ export default function PostItemForm() {
         price: parsedPrice,
         condition,
         location,
-        category_id: categoryId,
+        category_id: selectedChildId,
       };
 
       const item = await itemService.createItem(itemPayload);
-
 
       if (image) {
         const imageFile = {
@@ -103,7 +117,8 @@ export default function PostItemForm() {
       setPrice("");
       setCondition("good");
       setLocation("");
-      setCategoryId("");
+      setSelectedParentId("");
+      setSelectedChildId("");
       setImage(null);
 
       console.log("Item created:", item);
@@ -139,6 +154,10 @@ export default function PostItemForm() {
       />
     );
   }
+
+  console.log("parentCategories:", parentCategories);
+  console.log("CATEGORIES FROM API:", categories);
+
 
   return (
     <KeyboardAvoidingView
@@ -189,8 +208,6 @@ export default function PostItemForm() {
             style={postStyles.input}
           />
 
-
-
           <Text style={postStyles.label}>Condition</Text>
           <View style={postStyles.pickerWrapper}>
             <Picker
@@ -199,15 +216,12 @@ export default function PostItemForm() {
               style={postStyles.picker}
               dropdownIconColor={colors.genralWhite}
               mode="dropdown"
-
-
             >
               <Picker.Item label="Pristine" value="pristine" />
               <Picker.Item label="Good" value="good" />
               <Picker.Item label="Worn" value="worn" />
             </Picker>
           </View>
-
 
           <TextInput
             placeholder="Location"
@@ -217,24 +231,18 @@ export default function PostItemForm() {
             style={postStyles.input}
           />
 
-
-
           <Text style={postStyles.label}>Category</Text>
           <View style={postStyles.pickerWrapper}>
-  
             {categoriesLoading ? (
               <ActivityIndicator style={{ padding: 12 }} />
             ) : (
               <Picker
-                selectedValue={categoryId}
-                onValueChange={(value) => setCategoryId(value)}
+                selectedValue={selectedParentId}
+                onValueChange={(value) => handleParentChange(value)}
                 style={postStyles.picker}
-                dropdownIconColor={colors.genralWhite}
-                mode="dropdown"
-
               >
                 <Picker.Item label="Select a category" value="" />
-                {categories.map((category) => (
+                {parentCategories.map((category) => (
                   <Picker.Item
                     key={category.id}
                     label={category.name}
@@ -243,6 +251,25 @@ export default function PostItemForm() {
                 ))}
               </Picker>
             )}
+          </View>
+
+          <Text style={postStyles.label}>Subcategory</Text>
+          <View style={postStyles.pickerWrapper}>
+            <Picker
+              selectedValue={selectedChildId}
+              onValueChange={(value) => setSelectedChildId(value)}
+              enabled={!!selectedParentId}
+              style={postStyles.picker}
+            >
+              <Picker.Item label="Select a subcategory" value="" />
+              {childCategories.map((category) => (
+                <Picker.Item
+                  key={category.id}
+                  label={category.name}
+                  value={category.id}
+                />
+              ))}
+            </Picker>
           </View>
 
           {image && (
@@ -260,7 +287,9 @@ export default function PostItemForm() {
             style={postStyles.secondaryButton}
             onPress={pickImage}
           >
-            <Text style={postStyles.secondaryButtonText}>Choose From Library</Text>
+            <Text style={postStyles.secondaryButtonText}>
+              Choose From Library
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity

@@ -33,18 +33,40 @@ def seed_categories():
         get_or_create_category(db, "Shoes", clothing.id)
         get_or_create_category(db, "Shirts", clothing.id)
         get_or_create_category(db, "Pants", clothing.id)
+        get_or_create_category(db, "Jackets", clothing.id)
+        get_or_create_category(db, "Accessories", clothing.id)
+        get_or_create_category(db, "Other", clothing.id)
 
         get_or_create_category(db, "Laptops", electronics.id)
         get_or_create_category(db, "Phones", electronics.id)
         get_or_create_category(db, "Headphones", electronics.id)
+        get_or_create_category(db, "Tablets", electronics.id)
+        get_or_create_category(db, "Gaming", electronics.id)
+        get_or_create_category(db, "Chargers & Accessories", electronics.id)
+        get_or_create_category(db, "Other", electronics.id)
 
         get_or_create_category(db, "Math", textbooks.id)
         get_or_create_category(db, "Computer Science", textbooks.id)
         get_or_create_category(db, "Biology", textbooks.id)
+        get_or_create_category(db, "Chemistry", textbooks.id)
+        get_or_create_category(db, "Statistics", textbooks.id)
+        get_or_create_category(db, "Psychology", textbooks.id)
+        get_or_create_category(db, "Business", textbooks.id)
+        get_or_create_category(db, "Engineering", textbooks.id)
+        get_or_create_category(db, "Physics", textbooks.id)
+        get_or_create_category(db, "History", textbooks.id)
+        get_or_create_category(db, "Other", textbooks.id)
+
 
         get_or_create_category(db, "Chairs", furniture.id)
         get_or_create_category(db, "Desks", furniture.id)
-
+        get_or_create_category(db, "Bed", furniture.id)
+        get_or_create_category(db, "Lighting", furniture.id)
+        get_or_create_category(db, "Couch", furniture.id)
+        get_or_create_category(db, "Table", furniture.id)
+        get_or_create_category(db, "Shelves", furniture.id)
+        get_or_create_category(db, "Dressers", furniture.id)
+        get_or_create_category(db, "Other", furniture.id)
 
         print("Categories seeded successfully.")
     finally:

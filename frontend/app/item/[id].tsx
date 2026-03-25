@@ -80,7 +80,7 @@ export default function ItemDetailsScreen() {
 
   const downloadUrl =
     primaryImage
-      ? `${BASE_URL}/listing-images/${primaryImage.id}/download?id=${primaryImage.id}`
+      ? `${BASE_URL}/listing-image/${primaryImage.id}/download?id=${primaryImage.id}`
       : null;
 
   console.log("TOKEN:", token);
