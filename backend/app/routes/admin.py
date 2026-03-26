@@ -13,6 +13,7 @@ from backend.app.models.user import User
 
 admin_router = APIRouter(prefix="/admin", tags=["admin"])
 
+
 @admin_router.delete("/listings/{listing_id}")
 def admin_delete_listing(
     listing_id: UUID,
@@ -29,6 +30,7 @@ def admin_delete_listing(
 
     return {"message": "Listing deleted by admin"}
 
+
 @admin_router.get("/users")
 def admin_get_users(
     db: Session = Depends(get_db),
@@ -43,9 +45,11 @@ def admin_get_users(
             "school_email": user.school_email,
             "is_admin": user.is_admin,
             "is_email_verified": user.is_email_verified,
+            "is_banned": user.is_banned,
         }
         for user in users
     ]
+
 
 @admin_router.get("/users/{user_id}")
 def admin_get_user(
@@ -66,6 +70,7 @@ def admin_get_user(
         "is_email_verified": user.is_email_verified,
     }
 
+
 @admin_router.patch("/users/{user_id}/make-admin")
 def make_user_admin(
     user_id: UUID,
@@ -83,6 +88,7 @@ def make_user_admin(
 
     return {"message": f"{user.username} is now an admin"}
 
+
 @admin_router.delete("/reviews/{review_id}")
 def admin_delete_review(
     review_id: UUID,
@@ -98,6 +104,7 @@ def admin_delete_review(
     db.commit()
 
     return {"message": "Review deleted by admin"}
+
 
 @admin_router.delete("/listing-images/{image_id}")
 def admin_delete_listing_image(
@@ -122,6 +129,7 @@ def admin_delete_listing_image(
 
     return {"message": "Listing image deleted by admin"}
 
+
 @admin_router.patch("/users/{user_id}/ban")
 def ban_user(
     user_id: UUID,
@@ -139,6 +147,7 @@ def ban_user(
 
     return {"message": f"{user.username} has been banned"}
 
+
 @admin_router.patch("/users/{user_id}/unban")
 def unban_user(
     user_id: UUID,
@@ -155,3 +164,4 @@ def unban_user(
     db.refresh(user)
 
     return {"message": f"{user.username} has been unbanned"}
+

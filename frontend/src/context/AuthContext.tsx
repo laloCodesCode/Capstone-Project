@@ -9,6 +9,11 @@ import { authService } from "../services/auth";
 // import { AuthUser, UserCreate } from "../types/auth";
 import { UserRegister } from "../types/auth";
 
+//For type of user response
+interface AuthUser {
+  token: string;
+  is_admin: boolean;
+}
 //Context Reponse
 interface AuthContextType {
   // user: AuthUser | null;
@@ -22,73 +27,31 @@ interface AuthContextType {
 // Context creation deafult null
 const AuthContext = createContext<AuthContextType | null>(null);
 
-/*
- * old context that automatically logged in user after
- * registertion
- */
-// // Gives the entire app auth context
-// export function AuthProvider({ children }: { children: ReactNode }) {
-//   const [user, setUser] = useState<AuthUser | null>(null);
-//   const [loading, setLoading] = useState(true);
-//
-//   //Check for token
-//   //useEffect(() => {
-//   //  authService.getToken().then((token) => {
-//   //     if (token) setUser({ token });
-//   //   setLoading(false);
-//   //  });
-//   //  }, []);
-//
-//   useEffect(() => {
-//     setUser({ token: "dev-token" });
-//     setLoading(false);
-//   }, []);
-//   const login = async (identifer: string, password: string): Promise<void> => {
-//     const token = await authService.login(identifer, password);
-//     setUser({ token });
-//   };
-//
-//   const register = async (userData: UserCreate): Promise<void> => {
-//     await authService.register(userData);
-//
-//     //Allows for auto login after user registers
-//     await login(userData.username, userData.password);
-//   };
-//
-//   const logout = async (): Promise<void> => {
-//     await authService.logout();
-//     setUser(null);
-//   };
-//
-//   return (
-//     <AuthContext.Provider value={{ user, login, register, logout, loading }}>
-//       {children}
-//     </AuthContext.Provider>
-//   );
-// }
-//
-// //Custom hook to allow all screens to access the context
-// export const useAuth = (): AuthContextType => {
-//   const ctx = useContext(AuthContext);
-//   if (!ctx) throw new Error("useAuth must be used within an AuthProvider");
-//   return ctx;
-// };
-
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<{ token: string } | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
+
+  // const [user, setUser] = useState<{ token: string } | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    authService.getToken().then((token) => {
-      if (token) setUser({ token });
+    authService.getToken().then(async (token) => {
+      if (token) {
+        try {
+          const me = await authService.getMe();
+          setUser({ token, is_admin: me.is_admin });
+        } catch {
+          setUser({ token, is_admin: false });
+        }
+      }
       setLoading(false);
     });
   }, []);
 
   //login
   const login = async (identifier: string, password: string): Promise<void> => {
-    const token = await await authService.login(identifier, password);
-    setUser({ token });
+    const token = await authService.login(identifier, password);
+    const me = await authService.getMe();
+    setUser({ token, is_admin: me.is_admin });
   };
 
   //register

@@ -132,6 +132,10 @@ export const authService = {
     if (res.status == 403) {
       throw new Error("Please verify your email before logging in!");
     }
+    if (res.status === 403) {
+      const err = await res.json();
+      throw new Error(err.detail || "Your account has been banned");
+    }
 
     //Login may go wrong for whatever reason
     if (!res.ok) {
