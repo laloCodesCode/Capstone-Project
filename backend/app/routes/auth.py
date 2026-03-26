@@ -61,7 +61,7 @@ def login(
         raise HTTPException(
             status_code=403, detail="Please verify your email before logging in."
         )
-    if user.is_banned:  # ← add this
+    if user.is_banned:
         raise HTTPException(status_code=403, detail="Your account has been banned.")
     token = create_access_token(
         {
