@@ -19,7 +19,11 @@ export default function ConversationCard({
 }: Props) {
   return (
     <Pressable style={styles.container} onPress={onPress}>
-      <Image source={{ uri: avatar }} style={styles.avatar} />
+      <Image
+        source={{ uri: avatar }}
+        style={styles.avatar}
+        resizeMode="cover"
+      />
 
       <View style={styles.middle}>
         <Text style={styles.name}>{name}</Text>
@@ -49,9 +53,10 @@ const styles = StyleSheet.create({
   },
 
   avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 56,
+    height: 56,
+    borderRadius: 8,
+    backgroundColor: "#ddd",
   },
 
   middle: {

@@ -12,6 +12,8 @@ class Settings(BaseSettings):
     R2_SECRET_KEY: str
     R2_BUCKET_NAME: str
     CLOUDFLARE_ACCOUNT_ID: str
+    
+    backend_base_url: str
 
     model_config = SettingsConfigDict(env_file=".env")
 

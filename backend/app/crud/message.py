@@ -3,6 +3,7 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session
 
+from backend.app.config.settings import settings
 from backend.app.models.listing import Listing
 from backend.app.models.message import Message
 from backend.app.models.message_thread import MessageThread
@@ -52,6 +53,7 @@ def get_user_threads(db: Session, user_id: UUID) -> list[type[MessageThread]]:
         .all()
     )
 
+
 def get_thread_by_id(db: Session, thread_id: UUID) -> MessageThread | None:
     return db.query(MessageThread).filter(MessageThread.id == thread_id).first()
 
@@ -81,8 +83,6 @@ def get_listing_by_id(db: Session, listing_id: UUID) -> Listing | None:
     return db.query(Listing).filter(Listing.id == listing_id).first()
 
 
-# inbox routes 
-
 def get_user_inbox_threads(db: Session, user_id: UUID):
     threads = (
         db.query(MessageThread)
@@ -94,7 +94,7 @@ def get_user_inbox_threads(db: Session, user_id: UUID):
     )
 
     results = []
-    
+
     for thread in threads:
         other_user = thread.seller if thread.buyer_id == user_id else thread.buyer
 
@@ -105,16 +105,33 @@ def get_user_inbox_threads(db: Session, user_id: UUID):
             .first()
         )
 
-        results.append({
-            "id": thread.id,
-            "other_user_id": other_user.id,
-            "other_user_name": other_user.username,
-            "listing_id": thread.listing_id,
-            "last_message": last_message.body if last_message else None,
-            "last_message_at": last_message.created_at if last_message else None,
-            "unread_count": 0,
-        })
+        listing = thread.listing
+
+        image_to_use = None
+        if listing and listing.images:
+            image_to_use = next(
+                (image for image in listing.images if image.is_primary),
+                None,
+            )
+            if image_to_use is None:
+                image_to_use = listing.images[0]
+
+        results.append(
+            {
+                "id": thread.id,
+                "other_user_id": other_user.id,
+                "other_user_name": other_user.username,
+                "listing_id": thread.listing_id,
+                "last_message": last_message.body if last_message else None,
+                "last_message_at": last_message.created_at if last_message else None,
+                "unread_count": 0,
+                "listing_image_url": (
+                    f"{settings.backend_base_url}/listing-image/{image_to_use.id}/download"
+                    if image_to_use
+                    else None
+                ),
+                "listing_title": listing.title if listing else None,
+            }
+        )
 
     return results
-        
-    

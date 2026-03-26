@@ -32,3 +32,4 @@ class InboxThreadResponse(BaseModel):
     last_message: str | None
     last_message_at: datetime | None
     unread_count: int = 0
+    listing_image_url: str | None = None

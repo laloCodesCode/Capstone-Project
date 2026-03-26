@@ -162,7 +162,7 @@ export const authService = {
 
   //Logout the application
   logout: async (): Promise<void> => {
-    await SecureStore.getItemAsync("token");
+    await SecureStore.deleteItemAsync("token");
   },
 
   //Get the bearer token
@@ -173,25 +173,22 @@ export const authService = {
   //Get specific user information
   getMe: async (): Promise<MeResponse> => {
     const token = await SecureStore.getItemAsync("token");
-    const url = `${BASE_URL}/auth/me`;
+  
     const res = await fetch(`${BASE_URL}/auth/me`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
-    console.log("getMe URL:", url);
-
-    //The session 60 minute was reached
-    if (res.status == 401) {
+  
+    if (res.status === 401) {
       await SecureStore.deleteItemAsync("token");
       throw new Error("Session Expired!");
     }
-
-    //Failed to laod the user profile -> itermitten error that can occur !!
+  
     if (!res.ok) {
       const err = await res.json();
       throw new Error(err.detail || "Failed to fetch your profile!");
     }
-
+  
     return res.json() as Promise<MeResponse>;
   },
 
