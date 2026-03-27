@@ -25,7 +25,9 @@ class ListingImage(Base):
         default=datetime.datetime.utcnow,
         nullable=False,
     )
+
     listing: Mapped["Listing"] = relationship(
-        "Listing",
-        back_populates="images",
-    )
+    "Listing",
+    back_populates="images",
+)
+

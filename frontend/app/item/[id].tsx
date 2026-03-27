@@ -80,7 +80,7 @@ export default function ItemDetailsScreen() {
 
   const downloadUrl =
     primaryImage
-      ? `${BASE_URL}/item-images/${primaryImage.image_id}/download?item_listing_id=${primaryImage.item_listing_id}`
+      ? `${BASE_URL}/listing-image/${primaryImage.id}/download?id=${primaryImage.id}`
       : null;
 
   console.log("TOKEN:", token);
@@ -107,14 +107,18 @@ export default function ItemDetailsScreen() {
         <Text style={styles.title}>{item.title}</Text>
         <Text style={styles.price}>${item.price}</Text>
 
-        <Text style={styles.sectionTitle}>Description</Text>
-        <Text style={styles.text}>{item.description}</Text>
+        <Text style={styles.sectionTitle}>Item Information:</Text>
+        <Text style={styles.text}>Description: {item.description}</Text>
+        <Text style={styles.text}>Condition: {item.condition}</Text>
+        <Text style={styles.text}>Located at: {item.location}</Text>
 
-        {item.owner && (
+
+
+        {item.seller && (
           <>
             <Text style={styles.sectionTitle}>Seller</Text>
-            <Text style={styles.text}>Name: {item.owner.first_name}</Text>
-            <Text style={styles.text}>Email: {item.owner.email}</Text>
+            <Text style={styles.text}>Name: {item.seller.username}</Text>
+            <Text style={styles.text}>Email: {item.seller.school_email}</Text>
           </>
         )}
 

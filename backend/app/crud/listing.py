@@ -1,7 +1,7 @@
 from uuid import UUID
 
 from sqlalchemy import asc, desc, or_
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from backend.app.models import Listing
 from backend.app.schemas.listing import ListingCreate, ListingUpdate
@@ -21,8 +21,20 @@ def create_listing(db: Session, listing: ListingCreate, seller_id: UUID) -> List
     db.commit()
     db.refresh(listing)
     return listing
+
+
+
 def get_listing(db:Session, listing_id: UUID):
-    return db.query(Listing).filter(Listing.id == listing_id).first()
+    return (
+        db.query(Listing)
+        .options(
+            joinedload(Listing.seller),
+            joinedload(Listing.images),
+        )
+        .filter(Listing.id == listing_id)
+        .first()
+    )
+
 
 def get_listings(
         db:Session,
@@ -37,7 +49,10 @@ def get_listings(
         q: str | None = None,
 
 ):
-    query = db.query(Listing)
+    query = db.query(Listing).options(
+        joinedload(Listing.seller),
+        joinedload(Listing.images),
+    )
     if category_id:
         query = query.filter(Listing.category_id == category_id)
 
@@ -92,4 +107,12 @@ def update_listing(db: Session, listing: Listing, payload: ListingUpdate) -> Lis
     return listing
 
 def get_my_listings(db: Session, seller_id: UUID):
-    return db.query(Listing).filter(Listing.seller_id == seller_id).all()
+    return (
+        db.query(Listing)
+        .options(
+            joinedload(Listing.seller),
+            joinedload(Listing.images),
+        )
+        .filter(Listing.seller_id == seller_id)
+        .all()
+    )

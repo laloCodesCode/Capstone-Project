@@ -13,7 +13,7 @@ export const itemService = {
             throw new Error("No authentication token found");
         }
 
-        const res = await fetch(`${BASE_URL}/item-listings/`, {
+        const res = await fetch(`${BASE_URL}/listing/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -43,11 +43,11 @@ export const itemService = {
           }
 
         const formData = new FormData();
-        formData.append("item_listing_id", itemId);
+        formData.append("listing_id", itemId);
         formData.append("file", imageFile);
         formData.append("is_primary", String(isPrimary));
 
-        const res = await fetch(`${BASE_URL}/item-images/`, {
+        const res = await fetch(`${BASE_URL}/listing-image/`, {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -64,22 +64,41 @@ export const itemService = {
     },
 
 
-    getAllItems: async (): Promise<ItemResponse[]> => {
-        const res = await fetch(`${BASE_URL}/item-listings/`, {
+    getAllItems: async (params?: {
+        q?: string;
+        category_id?: string;
+      }): Promise<ItemResponse[]> => {
+        const searchParams = new URLSearchParams();
+    
+        if (params?.q && params.q.trim()) {
+          searchParams.append("q", params.q.trim());
+        }
+    
+        if (params?.category_id) {
+          searchParams.append("category_id", params.category_id);
+        }
+    
+        const queryString = searchParams.toString();
+        const url = queryString
+          ? `${BASE_URL}/listing/?${queryString}`
+          : `${BASE_URL}/listing/`;
+    
+        const res = await fetch(url, {
           method: "GET",
         });
-      
+    
         if (!res.ok) {
           const errText = await res.text();
           throw new Error(errText || "Failed to fetch item listings");
         }
-      
+    
         return res.json() as Promise<ItemResponse[]>;
       },
 
+      
     // Get item listing by ID
     getItemById: async (itemId: string): Promise<ItemResponse> => {
-        const res = await fetch(`${BASE_URL}/item-listings/${itemId}/`, {
+        const res = await fetch(`${BASE_URL}/listing/${itemId}/`, {
             method: "GET",
         });
 
@@ -99,7 +118,7 @@ export const itemService = {
             throw new Error("No authentication token found");
         }
 
-        const res = await fetch(`${BASE_URL}/item-listings/my/`, {
+        const res = await fetch(`${BASE_URL}/listing/me`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`,

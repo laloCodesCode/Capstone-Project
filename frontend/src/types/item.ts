@@ -3,33 +3,40 @@ export interface PostItem {
     title: string;
     description: string;
     price: number;
+    condition: string;
+    status?: string;
+    location: string;
+    category_id: string;
+    created_at?: string;
+
 }
 
+export interface ItemSeller {
+    username: string;
+    school_email: string;
+}
+
+
 export interface ItemImage {
-    image_id: string;
-    item_listing_id: string;
-    file_url: string;
+    id: string;
+    listing_id: string;
+    image_url: string;
     is_primary: boolean;
     created_at?: string;
   }
 
 
 export interface ItemResponse {
-    item_listing_id: string;
+    id: string;
     title: string;
     description: string;
     price: number;
-    is_active: boolean;
+    condition: string;
+    status: string;
+    location: string;
+    category_id: string | null;
     created_at: string;
-    updated_at: string;
-    user_id: string;
-    owner?: ItemOwner;
+    seller_id: string;
+    seller?: ItemSeller;
     images?: ItemImage[];
-}
-
-export interface ItemOwner {
-    username: string;
-    email: string;
-    first_name: string;
-    last_name: string;
 }

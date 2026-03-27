@@ -117,4 +117,26 @@ export const postStyles = StyleSheet.create({
     color: colors.success,
     fontSize: 14,
   },
+
+  pickerWrapper: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.authCard,
+    borderRadius: 8,
+    //overflow: "hidden",
+    marginBottom: 12,
+  },
+  
+  picker: {
+    color: colors.genralWhite,
+    width: "100%",
+  },
+
+
+  label: {
+    fontSize: 17,
+    color: colors.textSecondary,
+    marginTop: 12,
+    marginBottom: 4,
+  },
 });
