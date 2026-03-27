@@ -55,9 +55,9 @@ export default function PostItemForm() {
   }, []);
 
   const parentCategories = categories.filter(
-    (category) => !category.parent_id
+    (category) => category.parent_id === null
   );
-
+  
   const childCategories = categories.filter(
     (category) => category.parent_id === selectedParentId
   );

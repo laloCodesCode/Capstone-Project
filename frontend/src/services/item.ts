@@ -64,19 +64,38 @@ export const itemService = {
     },
 
 
-    getAllItems: async (): Promise<ItemResponse[]> => {
-        const res = await fetch(`${BASE_URL}/listing/`, {
+    getAllItems: async (params?: {
+        q?: string;
+        category_id?: string;
+      }): Promise<ItemResponse[]> => {
+        const searchParams = new URLSearchParams();
+    
+        if (params?.q && params.q.trim()) {
+          searchParams.append("q", params.q.trim());
+        }
+    
+        if (params?.category_id) {
+          searchParams.append("category_id", params.category_id);
+        }
+    
+        const queryString = searchParams.toString();
+        const url = queryString
+          ? `${BASE_URL}/listing/?${queryString}`
+          : `${BASE_URL}/listing/`;
+    
+        const res = await fetch(url, {
           method: "GET",
         });
-      
+    
         if (!res.ok) {
           const errText = await res.text();
           throw new Error(errText || "Failed to fetch item listings");
         }
-      
+    
         return res.json() as Promise<ItemResponse[]>;
       },
 
+      
     // Get item listing by ID
     getItemById: async (itemId: string): Promise<ItemResponse> => {
         const res = await fetch(`${BASE_URL}/listing/${itemId}/`, {
