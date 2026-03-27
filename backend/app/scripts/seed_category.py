@@ -35,7 +35,7 @@ def seed_categories():
         get_or_create_category(db, "Pants", clothing.id)
         get_or_create_category(db, "Jackets", clothing.id)
         get_or_create_category(db, "Accessories", clothing.id)
-        get_or_create_category(db, "Other", clothing.id)
+        get_or_create_category(db, "Other clothing", clothing.id)
 
         get_or_create_category(db, "Laptops", electronics.id)
         get_or_create_category(db, "Phones", electronics.id)
@@ -43,7 +43,7 @@ def seed_categories():
         get_or_create_category(db, "Tablets", electronics.id)
         get_or_create_category(db, "Gaming", electronics.id)
         get_or_create_category(db, "Chargers & Accessories", electronics.id)
-        get_or_create_category(db, "Other", electronics.id)
+        get_or_create_category(db, "Other electronics", electronics.id)
 
         get_or_create_category(db, "Math", textbooks.id)
         get_or_create_category(db, "Computer Science", textbooks.id)
@@ -55,7 +55,7 @@ def seed_categories():
         get_or_create_category(db, "Engineering", textbooks.id)
         get_or_create_category(db, "Physics", textbooks.id)
         get_or_create_category(db, "History", textbooks.id)
-        get_or_create_category(db, "Other", textbooks.id)
+        get_or_create_category(db, "Other textbooks", textbooks.id)
 
 
         get_or_create_category(db, "Chairs", furniture.id)
@@ -66,7 +66,7 @@ def seed_categories():
         get_or_create_category(db, "Table", furniture.id)
         get_or_create_category(db, "Shelves", furniture.id)
         get_or_create_category(db, "Dressers", furniture.id)
-        get_or_create_category(db, "Other", furniture.id)
+        get_or_create_category(db, "Other furniture", furniture.id)
 
         print("Categories seeded successfully.")
     finally:
