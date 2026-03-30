@@ -10,6 +10,7 @@ import {
   Modal,
   TouchableOpacity,
   ScrollView,
+  RefreshControl
 } from "react-native";
 import ItemListingCard from "../../src/components/itemListingCard";
 import { itemService } from "../../src/services/item";
@@ -27,6 +28,7 @@ export default function HomeScreen() {
 
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
+  const [refreshing, setRefreshing] = useState(false);
 
   const loadItems = async (q = "", categoryId = "") => {
     try {
@@ -38,6 +40,7 @@ export default function HomeScreen() {
         category_id: categoryId || undefined,
       });
 
+
       setItems(data);
     } catch (err: any) {
       setError(err.message || "Failed to load items");
@@ -45,6 +48,9 @@ export default function HomeScreen() {
       setLoading(false);
     }
   };
+
+
+
 
   const loadCategories = async () => {
     try {
@@ -84,6 +90,12 @@ export default function HomeScreen() {
     setDropdownVisible(false);
     loadItems(searchText, "");
   };
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await loadItems();
+    setRefreshing(false);
+  }
 
   if (loading && items.length === 0) {
     return (
@@ -129,7 +141,14 @@ export default function HomeScreen() {
         data={items}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <ItemListingCard item={item} />}
+        numColumns={2}
+        columnWrapperStyle={styles.row}
         contentContainerStyle={styles.listContent}
+        refreshControl={
+          <RefreshControl refreshing={refreshing}
+          onRefresh={handleRefresh}
+          tintColor={colors.primary02} />
+        }
         ListEmptyComponent={
           <Text style={styles.emptyText}>No items listed yet.</Text>
         }
@@ -241,8 +260,8 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
   },
   listContent: {
-    paddingHorizontal: 16,
-    paddingBottom: 24,
+    paddingHorizontal: 10,
+    paddingBottom: 50,
   },
   emptyText: {
     textAlign: "center",
@@ -253,5 +272,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+
+  row: {
+    justifyContent: "space-between",
   },
 });
