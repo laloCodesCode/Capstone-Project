@@ -11,9 +11,9 @@ from backend.app.crud.message import (
     get_thread_by_id,
     get_thread_by_listing_and_users,
     get_thread_messages,
+    get_user_inbox_threads,
     get_user_threads,
 )
-from backend.app.crud.notification import create_notification
 from backend.app.db.dependencies import get_current_user, get_db
 from backend.app.models.user import User
 from backend.app.schemas import (
@@ -21,7 +21,9 @@ from backend.app.schemas import (
     MessageResponse,
     ThreadCreate,
     ThreadResponse,
+
 )
+from backend.app.schemas.message import InboxThreadResponse
 
 message_router = APIRouter(prefix="/messages", tags=["messages"])
 
@@ -94,15 +96,13 @@ def send_message(
     if current_user.id not in [thread.buyer_id, thread.seller_id]:
         raise HTTPException(status_code=403, detail="Not allowed")
 
-    recipient_id = (
-        thread.seller_id if current_user.id == thread.buyer_id else thread.buyer_id
-    )
-
-    create_notification(
-        db=db,
-        user_id=recipient_id,
-        type="message",
-        content="You have a new message",
-    )
-
+    
     return create_message(db, thread_id, current_user.id, payload.body)
+
+# inbox routes 
+@message_router.get("/inbox", response_model=list[InboxThreadResponse])
+def get_inbox(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_verified_user),
+):
+    return get_user_inbox_threads(db, current_user.id)

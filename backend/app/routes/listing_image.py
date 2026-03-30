@@ -119,7 +119,6 @@ def delete_listing_image(
 def download_listing_image(
     image_id: UUID,
     db: Session = Depends(get_db),
-    current_user=Depends(get_verified_user),
 ):
     image = crud.get_listing_image(
         db=db,

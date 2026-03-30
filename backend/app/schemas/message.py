@@ -23,3 +23,13 @@ class MessageResponse(BaseModel):
     message_user: UUID
     body: str
     created_at: datetime
+    
+class InboxThreadResponse(BaseModel):
+    id: UUID
+    other_user_id: UUID
+    other_user_name: str
+    listing_id: UUID
+    last_message: str | None
+    last_message_at: datetime | None
+    unread_count: int = 0
+    listing_image_url: str | None = None

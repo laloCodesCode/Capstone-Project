@@ -7,6 +7,8 @@ type Props = {
   unread?: number;
   avatar: string;
   onPress: () => void;
+  isLastMessageFromOtherUser: boolean;
+
 };
 
 export default function ConversationCard({
@@ -16,14 +18,28 @@ export default function ConversationCard({
   unread,
   avatar,
   onPress,
+  isLastMessageFromOtherUser
+
 }: Props) {
   return (
     <Pressable style={styles.container} onPress={onPress}>
-      <Image source={{ uri: avatar }} style={styles.avatar} />
+      <Image
+        source={{ uri: avatar }}
+        style={styles.avatar}
+        resizeMode="cover"
+      />
 
-      <View style={styles.middle}>
+<View style={styles.middle}>
         <Text style={styles.name}>{name}</Text>
-        <Text style={styles.message}>{lastMessage}</Text>
+        <Text
+          style={[
+            styles.message,
+            isLastMessageFromOtherUser && styles.boldMessage,
+          ]}
+          numberOfLines={1}
+        >
+          {lastMessage}
+        </Text>
       </View>
 
       <View style={styles.right}>
@@ -38,7 +54,6 @@ export default function ConversationCard({
     </Pressable>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
@@ -49,9 +64,10 @@ const styles = StyleSheet.create({
   },
 
   avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 56,
+    height: 56,
+    borderRadius: 8,
+    backgroundColor: "#ddd",
   },
 
   middle: {
@@ -67,6 +83,11 @@ const styles = StyleSheet.create({
   message: {
     color: "#666",
     marginTop: 2,
+  },
+
+  boldMessage: {
+    fontWeight: "700",
+    color: "#111",
   },
 
   right: {
