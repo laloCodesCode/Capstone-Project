@@ -380,7 +380,7 @@ export default function ProfileScreen() {
           ]}
           onPress={logout}
         >
-          <Text style={profileStyles.dangerButtonText}>Log Out</Text>
+          <Text style={profileStyles.generalWhite}>Log Out</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>
