@@ -51,6 +51,8 @@ def get_current_user_listings(
     current_user: User = Depends(get_verified_user),
 ):
     return get_my_listings(db, current_user.id)
+
+
 @listing_router.get("/{listing_id}", response_model=ListingResponse)
 def get_single_listing(listing_id: UUID, db: Session = Depends(get_db)):
     listing = get_listing(db, listing_id)

@@ -120,3 +120,14 @@ export interface ReviewResponse {
   comment: string | null;
   created_at: string;
 }
+
+//allowing a user to updated a listing they are posted !
+export interface ListingUpdate {
+  title?: string;
+  description?: string;
+  price?: string;
+  condtion?: string;
+  location?: string;
+  category_id?: string;
+  status?: string;
+}
