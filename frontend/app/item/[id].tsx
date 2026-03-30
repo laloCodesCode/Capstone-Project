@@ -6,7 +6,8 @@ import {
   StyleSheet,
   Text,
   View,
-  Pressable
+  Pressable,
+  TouchableOpacity
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import * as SecureStore from "expo-secure-store";
@@ -26,6 +27,7 @@ export default function ItemDetailsScreen() {
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [threadLoading, setThreadLoading] = useState(false);
 
   useEffect(() => {
     const loadToken = async () => {
@@ -35,6 +37,56 @@ export default function ItemDetailsScreen() {
 
     loadToken();
   }, []);
+
+
+  const createThread = async () => {
+    try {
+      if (!item) return;
+
+      setThreadLoading(true);
+      setError("");
+
+      const savedToken = await SecureStore.getItemAsync("token");
+      if (!savedToken) {
+        throw new Error("You must be logged in to contact the seller.");
+      }
+
+      const response = await fetch(`${BASE_URL}/messages/threads`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${savedToken}`,
+        },
+        body: JSON.stringify({
+          listing_id: item.id,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.detail || "Failed to create thread");
+      }
+
+      router.push({
+        pathname: "/chat/[id]",
+        params: {
+          id: data.id,
+          name: item.seller?.username ?? "Chat",
+          listingId: item.id,
+          listingTitle: item.title,
+          listingImageUrl: downloadUrl ?? "",
+        },
+      });
+    } catch (err: any) {
+      console.error("Error creating thread:", err);
+      setError(err.message || "Could not start conversation");
+    } finally {
+      setThreadLoading(false);
+    }
+  };
+
+
 
   useEffect(() => {
     const loadItem = async () => {
@@ -122,13 +174,17 @@ export default function ItemDetailsScreen() {
           </>
         )}
 
-        <Pressable
+        <TouchableOpacity
           style={styles.contactButton}
-          onPress={() => router.back()}
+          onPress={createThread}
+          disabled={threadLoading}
         >
-          <Text style={styles.contactButtonText}>Contact Seller</Text>
-        </Pressable>
-
+          {threadLoading ? (
+            <ActivityIndicator color={colors.genralWhite} />
+          ) : (
+            <Text style={styles.contactButtonText}>Contact Seller</Text>
+          )}
+        </TouchableOpacity>
 
       </View>
 

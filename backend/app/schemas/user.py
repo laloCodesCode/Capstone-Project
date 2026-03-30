@@ -13,8 +13,6 @@ class UserResponse(BaseModel):
     is_email_verified: bool
     is_phone_verified: bool
     created_at: datetime
-    first_name: str
-    last_name: str
 
 
 

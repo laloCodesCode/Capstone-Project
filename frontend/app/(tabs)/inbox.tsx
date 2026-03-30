@@ -114,14 +114,14 @@ export default function Inbox() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#0f2044" }}>
       <View
         style={{
           paddingHorizontal: 16,
           paddingVertical: 12,
           borderBottomWidth: 1,
-          borderColor: "#eee",
-          backgroundColor: "white",
+          borderColor: "#0f2044",
+          backgroundColor: "#0f2044",
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
@@ -131,6 +131,7 @@ export default function Inbox() {
           style={{
             fontSize: 20,
             fontWeight: "700",
+            color: "white"
           }}
         >
           Inbox
@@ -147,7 +148,7 @@ export default function Inbox() {
           }
         }}
         >
-          <Ionicons name="notifications-outline" size={24} color="#0f2044" />
+          <Ionicons name="notifications-outline" size={24} color="white" />
   
           {unreadCount > 0 && (
             <View
@@ -210,7 +211,7 @@ export default function Inbox() {
         )}
         ListEmptyComponent={
           <View style={{ padding: 20, alignItems: "center" }}>
-            <Text>No conversations yet.</Text>
+            <Text style= {{color: "white"}}>No conversations yet.</Text>
           </View>
         }
       />
