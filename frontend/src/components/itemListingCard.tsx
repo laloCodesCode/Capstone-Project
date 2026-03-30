@@ -83,15 +83,11 @@ export default function ItemListingCard({ item }: ItemListingProps) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#ffb71d',
-    borderRadius: 24,
-    padding: 15,
-    marginBottom: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 4,
+    width: "48%",
+    marginBottom: 12,
+    backgroundColor: "#ffb71d",
+    borderRadius: 12,
+    padding: 12,
   },
   image: {
     width: "100%",
