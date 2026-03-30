@@ -84,7 +84,7 @@ export default function NotificationsScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#0f2044" }}>
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <ActivityIndicator />
         </View>
@@ -94,7 +94,7 @@ export default function NotificationsScreen() {
 
   if (error) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#0f2044" }}>
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <Text>{error}</Text>
         </View>
@@ -103,13 +103,12 @@ export default function NotificationsScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#0f2044" }}>
       {/* HEADER */}
       <View
         style={{
           paddingHorizontal: 16,
           paddingVertical: 12,
-          borderBottomWidth: 1,
           borderColor: "#eee",
           flexDirection: "row",
           alignItems: "center",
@@ -117,13 +116,13 @@ export default function NotificationsScreen() {
       >
         <Pressable
           onPress={() => router.back()}
-          style={{ marginRight: 12, flexDirection: "row", alignItems: "center" }}
+          style={{ marginRight: 12, flexDirection: "row", alignItems: "center"  }}
         >
-          <Ionicons name="chevron-back" size={24} color="#0f2044" />
-          <Text style={{ fontSize: 16, color: "#0f2044" }}>Back</Text>
+          <Ionicons name="chevron-back" size={24} color="white" />
+          <Text style={{ fontSize: 16, color: "white" }}>Back</Text>
         </Pressable>
 
-        <Text style={{ fontSize: 20, fontWeight: "700", textAlign:"center", width:"100%" }}>
+        <Text style={{ fontSize: 20, fontWeight: "700", color: "white"}}>
           Notifications
         </Text>
       </View>
@@ -197,7 +196,7 @@ export default function NotificationsScreen() {
         )}
         ListEmptyComponent={
           <View style={{ padding: 20, alignItems: "center" }}>
-            <Text>No notifications yet.</Text>
+            <Text style= {{color:"white"}}>No notifications yet.</Text>
           </View>
         }
       />
