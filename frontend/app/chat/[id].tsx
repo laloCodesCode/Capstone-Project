@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   TextInput,
   Pressable,
+  Image,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -15,7 +16,15 @@ import MessageBubble from "../../src/components/MessageBubble";
 import { authService } from "../../src/services/auth";
 
 export default function ChatScreen() {
-  const { id, name } = useLocalSearchParams<{ id: string; name?: string }>();
+  const { id, name, listingId, listingTitle, listingImageUrl } =
+    useLocalSearchParams<{
+      id: string;
+      name?: string;
+      listingId?: string;
+      listingTitle?: string;
+      listingImageUrl?: string;
+    }>();
+
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -23,6 +32,7 @@ export default function ChatScreen() {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   const router = useRouter();
+  const flatListRef = useRef<FlatList<ChatMessage>>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -59,6 +69,23 @@ export default function ChatScreen() {
     loadCurrentUser();
   }, []);
 
+  useEffect(() => {
+    if (messages.length > 0) {
+      setTimeout(() => {
+        flatListRef.current?.scrollToEnd({ animated: false });
+      }, 50);
+    }
+  }, [messages]);
+
+  const openListing = () => {
+    if (!listingId) return;
+
+    router.push({
+      pathname: "/item/[id]",
+      params: { id: listingId },
+    });
+  };
+
   const handleSend = async () => {
     if (!id || !newMessage.trim()) return;
 
@@ -73,8 +100,8 @@ export default function ChatScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView>
-        <View>
+      <SafeAreaView style={{ flex: 1 }}>
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <ActivityIndicator />
         </View>
       </SafeAreaView>
@@ -83,8 +110,8 @@ export default function ChatScreen() {
 
   if (error) {
     return (
-      <SafeAreaView>
-        <View>
+      <SafeAreaView style={{ flex: 1 }}>
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <Text>{error}</Text>
         </View>
       </SafeAreaView>
@@ -92,7 +119,7 @@ export default function ChatScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <View
         style={{
           flexDirection: "row",
@@ -107,18 +134,62 @@ export default function ChatScreen() {
           <Text style={{ fontSize: 16, color: "#0f2044" }}>← Back</Text>
         </Pressable>
 
-        <Text
+        {listingId ? (
+          <Pressable
+            onPress={openListing}
+            style={{
+              marginLeft: 14,
+            }}
+          >
+            <Image
+              source={{
+                uri: listingImageUrl || "https://via.placeholder.com/150",
+              }}
+              style={{
+                width: 44,
+                height: 44,
+                borderRadius: 8,
+                backgroundColor: "#ddd",
+              }}
+              resizeMode="cover"
+            />
+          </Pressable>
+        ) : null}
+
+        <View
           style={{
-            marginLeft: 16,
-            fontSize: 18,
-            fontWeight: "600",
+            marginLeft: 12,
+            flex: 1,
           }}
         >
-          {name || "Chat"}
-        </Text>
+          <Text
+            style={{
+              fontSize: 18,
+              fontWeight: "600",
+            }}
+          >
+            {name || "Chat"}
+          </Text>
+
+          {listingId ? (
+            <Pressable onPress={openListing}>
+              <Text
+                style={{
+                  marginTop: 2,
+                  color: "#0f2044",
+                  fontSize: 14,
+                }}
+              >
+                {listingTitle || "View Listing"}
+              </Text>
+            </Pressable>
+          ) : null}
+        </View>
       </View>
 
       <FlatList
+        ref={flatListRef}
+        style={{ backgroundColor: "white" }}
         data={messages}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
@@ -131,7 +202,14 @@ export default function ChatScreen() {
         contentContainerStyle={{ padding: 12 }}
       />
 
-      <View style={{ flexDirection: "row", padding: 12, gap: 8 }}>
+      <View
+        style={{
+          flexDirection: "row",
+          padding: 12,
+          gap: 8,
+          backgroundColor: "white",
+        }}
+      >
         <TextInput
           value={newMessage}
           onChangeText={setNewMessage}

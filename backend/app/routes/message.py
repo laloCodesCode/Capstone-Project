@@ -14,7 +14,6 @@ from backend.app.crud.message import (
     get_user_inbox_threads,
     get_user_threads,
 )
-from backend.app.crud.notification import create_notification
 from backend.app.db.dependencies import get_current_user, get_db
 from backend.app.models.user import User
 from backend.app.schemas import (
@@ -97,17 +96,7 @@ def send_message(
     if current_user.id not in [thread.buyer_id, thread.seller_id]:
         raise HTTPException(status_code=403, detail="Not allowed")
 
-    recipient_id = (
-        thread.seller_id if current_user.id == thread.buyer_id else thread.buyer_id
-    )
-
-    create_notification(
-        db=db,
-        user_id=recipient_id,
-        type="message",
-        content="You have a new message",
-    )
-
+    
     return create_message(db, thread_id, current_user.id, payload.body)
 
 # inbox routes 

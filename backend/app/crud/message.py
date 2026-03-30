@@ -7,6 +7,7 @@ from backend.app.config.settings import settings
 from backend.app.models.listing import Listing
 from backend.app.models.message import Message
 from backend.app.models.message_thread import MessageThread
+from backend.app.crud.notification import create_notification
 
 
 def get_thread_by_listing_and_users(
@@ -66,7 +67,6 @@ def get_thread_messages(db: Session, thread_id: UUID) -> list[type[Message]]:
         .all()
     )
 
-
 def create_message(db: Session, thread_id: UUID, user_id: UUID, body: str) -> Message:
     message = Message(
         thread_id=thread_id,
@@ -76,8 +76,25 @@ def create_message(db: Session, thread_id: UUID, user_id: UUID, body: str) -> Me
     db.add(message)
     db.commit()
     db.refresh(message)
-    return message
 
+    thread = db.query(MessageThread).filter(MessageThread.id == thread_id).first()
+
+    if thread:
+        receiver_id = (
+            thread.seller_id if user_id == thread.buyer_id else thread.buyer_id
+        )
+
+        create_notification(
+            db=db,
+            user_id=receiver_id,
+            actor_user_id=user_id,
+            thread_id=thread_id,
+            listing_id=thread.listing_id,
+            type="message",
+            content="message",
+        )
+
+    return message
 
 def get_listing_by_id(db: Session, listing_id: UUID) -> Listing | None:
     return db.query(Listing).filter(Listing.id == listing_id).first()
@@ -124,6 +141,7 @@ def get_user_inbox_threads(db: Session, user_id: UUID):
                 "listing_id": thread.listing_id,
                 "last_message": last_message.body if last_message else None,
                 "last_message_at": last_message.created_at if last_message else None,
+                "last_message_user_id": last_message.message_user,
                 "unread_count": 0,
                 "listing_image_url": (
                     f"{settings.BACKEND_BASE_URL}/listing-image/{image_to_use.id}/download"

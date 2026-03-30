@@ -5,6 +5,7 @@ export type InboxThread = {
     listing_id: string;
     last_message: string | null;
     last_message_at: string | null;
+    last_message_user_id?: string;
     unread_count: number;
     listing_image_url: string | null;
     listing_title?: string | null;
