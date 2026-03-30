@@ -172,6 +172,7 @@ export default function NotificationsScreen() {
                 style={{
                   marginTop: 2,
                   fontSize: 12,
+                  
                   color: "#999",
                 }}
               >
