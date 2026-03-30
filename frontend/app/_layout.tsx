@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { router, Slot } from "expo-router";
+import { router, Stack } from "expo-router";
 import { AuthProvider, useAuth } from "../src/context/AuthContext";
 
 function RootLayoutNav() {
@@ -14,7 +14,37 @@ function RootLayoutNav() {
     }
   }, [user, loading]);
 
-  return <Slot />;
+  return (
+    <Stack>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+
+      <Stack.Screen
+        name="chat/[id]"
+        options={{
+          headerShown: false,
+          animation: "slide_from_right",
+        }}
+      />
+
+      <Stack.Screen
+        name="item/[id]"
+        options={{
+          headerShown: false,
+          animation: "slide_from_right",
+        }}
+      />
+
+      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+
+      <Stack.Screen
+  name="notification/notifications"
+  options={{
+    headerShown: false,
+    animation: "slide_from_right",
+  }}
+/>
+    </Stack>
+  );
 }
 
 export default function RootLayout() {

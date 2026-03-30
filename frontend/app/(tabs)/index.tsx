@@ -55,6 +55,7 @@ export default function HomeScreen() {
     }
   };
 
+
   useEffect(() => {
     loadCategories();
     loadItems();

@@ -7,11 +7,11 @@ class Settings(BaseSettings):
     SECRET_KEY: str
     ALGORITHM: str
     RESEND_API_KEY: str
-
     R2_ACCESS_KEY: str
     R2_SECRET_KEY: str
     R2_BUCKET_NAME: str
     CLOUDFLARE_ACCOUNT_ID: str
+    BACKEND_BASE_URL: str
 
     model_config = SettingsConfigDict(env_file=".env")
 
