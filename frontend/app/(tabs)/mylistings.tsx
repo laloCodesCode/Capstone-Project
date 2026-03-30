@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Alert,
   TextInput,
+  RefreshControl,
 } from "react-native";
 import { itemService } from "../../src/services/item";
 import { ListingUpdate } from "../../src/types/auth";
@@ -21,7 +22,7 @@ export default function MyListingsScreen() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<ListingUpdate>({});
   const [saveLoading, setSaveLoading] = useState(false);
-
+  const [refreshing, setRefreshing] = useState(false);
   const fetchListings = async () => {
     try {
       setLoading(true);
@@ -51,6 +52,12 @@ export default function MyListingsScreen() {
     });
   };
 
+  // need to refresh page
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await fetchListings();
+    setRefreshing(false);
+  };
   const handleCancelEdit = () => {
     setEditingId(null);
     setEditForm({});
@@ -143,6 +150,13 @@ export default function MyListingsScreen() {
           data={listings}
           keyExtractor={(item) => item.id}
           contentContainerStyle={myListingsStyles.listContent}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={handleRefresh}
+              tintColor={colors.primary02}
+            />
+          }
           renderItem={({ item }) => {
             const isEditing = editingId === item.id;
 
