@@ -126,11 +126,11 @@ def verify_email(request: Request, token: str, db: Session = Depends(get_db)):
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     if user.is_email_verified:
-        return templates.TemplateResponse("verify_email.html", {"request": request})
+        return templates.TemplateResponse("verify-email.html", {"request": request})
     user.is_email_verified = True
     user.email_verified_at = datetime.now(timezone.utc)
     db.commit()
-    return templates.TemplateResponse("verify_email.html", {"request": request})
+    return templates.TemplateResponse("verify-email.html", {"request": request})
 
 
 @auth_router.post("/resend-verification")
