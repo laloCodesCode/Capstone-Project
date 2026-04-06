@@ -114,7 +114,6 @@ def me(current_user: User = Depends(get_current_user)):
 #     return {"message": "Email verified successfully"}
 
 
-EDUARDO
 @auth_router.get("/verify-email", response_class=HTMLResponse)
 def verify_email(request: Request, token: str, db: Session = Depends(get_db)):
     payload = decode_access_token(token)
