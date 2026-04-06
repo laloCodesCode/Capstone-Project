@@ -6,7 +6,8 @@ import {
   StyleSheet,
   Text,
   View,
-  Pressable
+  Pressable,
+  TouchableOpacity
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import * as SecureStore from "expo-secure-store";
@@ -26,6 +27,7 @@ export default function ItemDetailsScreen() {
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [threadLoading, setThreadLoading] = useState(false);
 
   useEffect(() => {
     const loadToken = async () => {
@@ -35,6 +37,56 @@ export default function ItemDetailsScreen() {
 
     loadToken();
   }, []);
+
+
+  const createThread = async () => {
+    try {
+      if (!item) return;
+
+      setThreadLoading(true);
+      setError("");
+
+      const savedToken = await SecureStore.getItemAsync("token");
+      if (!savedToken) {
+        throw new Error("You must be logged in to contact the seller.");
+      }
+
+      const response = await fetch(`${BASE_URL}/messages/threads`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${savedToken}`,
+        },
+        body: JSON.stringify({
+          listing_id: item.id,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.detail || "Failed to create thread");
+      }
+
+      router.push({
+        pathname: "/chat/[id]",
+        params: {
+          id: data.id,
+          name: item.seller?.username ?? "Chat",
+          listingId: item.id,
+          listingTitle: item.title,
+          listingImageUrl: downloadUrl ?? "",
+        },
+      });
+    } catch (err: any) {
+      console.error("Error creating thread:", err);
+      setError(err.message || "Could not start conversation");
+    } finally {
+      setThreadLoading(false);
+    }
+  };
+
+
 
   useEffect(() => {
     const loadItem = async () => {
@@ -80,7 +132,7 @@ export default function ItemDetailsScreen() {
 
   const downloadUrl =
     primaryImage
-      ? `${BASE_URL}/item-images/${primaryImage.image_id}/download?item_listing_id=${primaryImage.item_listing_id}`
+      ? `${BASE_URL}/listing-image/${primaryImage.id}/download?id=${primaryImage.id}`
       : null;
 
   console.log("TOKEN:", token);
@@ -107,24 +159,32 @@ export default function ItemDetailsScreen() {
         <Text style={styles.title}>{item.title}</Text>
         <Text style={styles.price}>${item.price}</Text>
 
-        <Text style={styles.sectionTitle}>Description</Text>
-        <Text style={styles.text}>{item.description}</Text>
+        <Text style={styles.sectionTitle}>Item Information:</Text>
+        <Text style={styles.text}>Description: {item.description}</Text>
+        <Text style={styles.text}>Condition: {item.condition}</Text>
+        <Text style={styles.text}>Located at: {item.location}</Text>
 
-        {item.owner && (
+
+
+        {item.seller && (
           <>
             <Text style={styles.sectionTitle}>Seller</Text>
-            <Text style={styles.text}>Name: {item.owner.first_name}</Text>
-            <Text style={styles.text}>Email: {item.owner.email}</Text>
+            <Text style={styles.text}>Name: {item.seller.username}</Text>
+            <Text style={styles.text}>Email: {item.seller.school_email}</Text>
           </>
         )}
 
-        <Pressable
+        <TouchableOpacity
           style={styles.contactButton}
-          onPress={() => router.back()}
+          onPress={createThread}
+          disabled={threadLoading}
         >
-          <Text style={styles.contactButtonText}>Contact Seller</Text>
-        </Pressable>
-
+          {threadLoading ? (
+            <ActivityIndicator color={colors.genralWhite} />
+          ) : (
+            <Text style={styles.contactButtonText}>Contact Seller</Text>
+          )}
+        </TouchableOpacity>
 
       </View>
 

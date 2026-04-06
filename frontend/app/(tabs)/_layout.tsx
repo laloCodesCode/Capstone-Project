@@ -2,9 +2,13 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
+import { useAuth } from "../../src/context/AuthContext";
+
 import { colors } from "../../src/styles/colors";
 
 export default function TabsLayout() {
+  const { user } = useAuth();
+
   return (
     <Tabs
       screenOptions={{
@@ -50,6 +54,25 @@ export default function TabsLayout() {
           title: "User",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="admin"
+        options={{
+          title: "Admin",
+          href: user?.is_admin ? "/admin" : null,
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="shield" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="mylistings"
+        options={{
+          title: "My Listings",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="list" size={size} color={color} />
           ),
         }}
       />

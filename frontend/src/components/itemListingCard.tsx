@@ -4,29 +4,15 @@ import * as SecureStore from "expo-secure-store";
 import { colors } from "../styles/colors";
 import { itemStyles } from "../styles/item.styles";
 import { router } from "expo-router";
+import { ItemResponse } from "../types/item";
 
 
 
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL;
 
 type ItemListingProps = {
-  item: {
-    item_listing_id: string;
-    title: string;
-    description: string;
-    price: number | string;
-    owner?: {
-      first_name: string;
-      email: string;
-    };
-    images?: {
-      image_id: string;
-      item_listing_id: string;
-      file_url: string;
-      is_primary: boolean;
-    }[];
-  };
-};
+  item: ItemResponse
+}
 
 export default function ItemListingCard({ item }: ItemListingProps) {
   const [token, setToken] = useState<string | null>(null);
@@ -45,7 +31,7 @@ export default function ItemListingCard({ item }: ItemListingProps) {
 
   const downloadUrl =
     primaryImage && token
-      ? `${BASE_URL}/item-images/${primaryImage.image_id}/download?item_listing_id=${primaryImage.item_listing_id}`
+      ? `${BASE_URL}/listing-image/${primaryImage.id}/download`
       : null;
 
 
@@ -53,7 +39,9 @@ export default function ItemListingCard({ item }: ItemListingProps) {
 
   console.log("ITEM CARD RENDERING:", item.title);
   console.log("DOWNLOAD URL:", downloadUrl);
-
+  console.log("item.images:", item.images);
+  console.log("primaryImage:", primaryImage);
+  console.log("primaryImage object:", primaryImage);
   return (
     <View style={styles.card}>
       {downloadUrl && (
@@ -72,16 +60,16 @@ export default function ItemListingCard({ item }: ItemListingProps) {
       <Text style={styles.description}>{item.description}</Text>
       <Text style={styles.price}>${item.price}</Text>
 
-      {item.owner && (
+      {item.seller && (
         <View style={styles.ownerContainer}>
-          <Text style={styles.ownerText}>Posted by: {item.owner.first_name}</Text>
-          <Text style={styles.ownerText}>{item.owner.email}</Text>
+          <Text style={styles.ownerText}>Posted by: {item.seller.username}</Text>
+          <Text style={styles.ownerText}>{item.seller.school_email}</Text>
         </View>
       )}
 
       <Pressable
         style={styles.detailsButton}
-        onPress={() => router.push(`/item/${item.item_listing_id}`)}
+        onPress={() => router.push(`/item/${item.id}`)}
       >
         <Text style={styles.detailsButtonText}>View Details</Text>
       </Pressable>
@@ -95,15 +83,11 @@ export default function ItemListingCard({ item }: ItemListingProps) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#ffb71d',
-    borderRadius: 24,
-    padding: 15,
-    marginBottom: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 4,
+    width: "48%",
+    marginBottom: 12,
+    backgroundColor: "#ffb71d",
+    borderRadius: 12,
+    padding: 12,
   },
   image: {
     width: "100%",

@@ -6,49 +6,61 @@ import {
   ReactNode,
 } from "react";
 import { authService } from "../services/auth";
-import { AuthUser, UserCreate } from "../types/auth";
+// import { AuthUser, UserCreate } from "../types/auth";
+import { UserRegister } from "../types/auth";
 
+//For type of user response
+interface AuthUser {
+  token: string;
+  is_admin: boolean;
+}
 //Context Reponse
 interface AuthContextType {
-  user: AuthUser | null;
+  // user: AuthUser | null;
+  user: { token: string } | null;
   loading: boolean;
   login: (identifer: string, password: string) => Promise<void>;
-  register: (userData: UserCreate) => Promise<void>;
+  register: (userData: UserRegister) => Promise<void>;
   logout: () => Promise<void>;
 }
 
 // Context creation deafult null
 const AuthContext = createContext<AuthContextType | null>(null);
 
-// Gives the entire app auth context
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
+
+  // const [user, setUser] = useState<{ token: string } | null>(null);
   const [loading, setLoading] = useState(true);
 
-  //Check for token
-  //useEffect(() => {
-  //  authService.getToken().then((token) => {
- //     if (token) setUser({ token });
-   //   setLoading(false);
-  //  });
-//  }, []);
-
   useEffect(() => {
-  setUser({ token: "dev-token" });
-  setLoading(false);
-}, []);
-  const login = async (identifer: string, password: string): Promise<void> => {
-    const token = await authService.login(identifer, password);
-    setUser({ token });
+    authService.getToken().then(async (token) => {
+      if (token) {
+        try {
+          const me = await authService.getMe();
+          setUser({ token, is_admin: me.is_admin });
+        } catch {
+          setUser({ token, is_admin: false });
+        }
+      }
+      setLoading(false);
+    });
+  }, []);
+
+  //login
+  const login = async (identifier: string, password: string): Promise<void> => {
+    const token = await authService.login(identifier, password);
+    const me = await authService.getMe();
+    setUser({ token, is_admin: me.is_admin });
   };
 
-  const register = async (userData: UserCreate): Promise<void> => {
+  //register
+  //NOTE:the user is no longer auto logged in after the registration sequence completes -> the user must now hit the verification email to have their login validated
+  const register = async (userData: UserRegister): Promise<void> => {
     await authService.register(userData);
-
-    //Allows for auto login after user registers
-    await login(userData.username, userData.password);
   };
 
+  //logout
   const logout = async (): Promise<void> => {
     await authService.logout();
     setUser(null);
@@ -61,7 +73,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
-//Custom hook to allow all screens to access the context
+//allows views to access the auth context
 export const useAuth = (): AuthContextType => {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error("useAuth must be used within an AuthProvider");

@@ -8,3 +8,4 @@ class CategoryResponse(BaseModel):
     id: UUID
     name: str
     created_at: datetime
+    parent_id: UUID | None

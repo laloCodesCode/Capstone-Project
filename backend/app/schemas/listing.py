@@ -2,6 +2,13 @@ from datetime import datetime
 from uuid import UUID
 
 from pydantic import BaseModel
+from .listing_image import ListingImageOut
+
+class ItemSeller(BaseModel):
+    id: UUID
+    username: str
+    school_email: str
+
 
 
 class ListingCreate(BaseModel):
@@ -24,6 +31,8 @@ class ListingResponse(BaseModel):
     seller_id: UUID
     category_id: UUID | None
     created_at: datetime
+    seller: ItemSeller
+    images: list[ListingImageOut] = []
 
 class ListingUpdate(BaseModel):
     title: str | None = None
