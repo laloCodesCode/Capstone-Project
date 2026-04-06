@@ -21,7 +21,7 @@ from backend.app.db.dependencies import get_current_user, get_db
 from backend.app.models import User
 from backend.app.schemas import UserRegister, UserResponse
 
-templates = Jinja2Templates(directory="app/templates")
+templates = Jinja2Templates(directory="templates")
 
 auth_router = APIRouter(prefix="/auth", tags=["auth"])
 
