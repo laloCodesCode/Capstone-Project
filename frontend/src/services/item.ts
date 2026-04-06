@@ -164,7 +164,7 @@ export const itemService = {
     const res = await fetch(`${BASE_URL}/listing/${itemId}`, {
       method: "DELETE",
       headers: {
-        Authorization: `Bearer${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
     if (!res.ok) {
@@ -173,4 +173,3 @@ export const itemService = {
     }
   },
 };
-
