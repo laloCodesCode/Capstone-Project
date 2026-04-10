@@ -1,23 +1,17 @@
-import {
-  StyleSheet,
-  Dimensions,
-  ScrollView,
-  ImageBackgroundComponent,
-} from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 import { colors } from "./colors";
-import { Background } from "@react-navigation/elements";
 
 const { height } = Dimensions.get("window");
 
 export const profileStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.primary01,
+    backgroundColor: colors.primary02,
   },
 
   topHalf: {
-    height: height * 0.3,
-    backgroundColor: colors.primary01,
+    height: 0,
+    backgroundColor: colors.primary02,
   },
 
   bottomHalf: {
@@ -35,42 +29,37 @@ export const profileStyles = StyleSheet.create({
   },
 
   scrollContent: {
-    paddingTop: height * 0.08,
-    paddingHorizontal: 24,
-    paddingBottom: 100,
+    flex: 1,
+    paddingTop: 24,
+    paddingBottom: 0,
   },
 
-  //profile/avatar
   avatarContainer: {
     alignItems: "center",
-    marginBottom: 24,
+    marginBottom: 12,
+    paddingHorizontal: 24,
   },
 
   avatarCircle: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
+    width: 82,
+    height: 82,
+    borderRadius: 41,
     backgroundColor: colors.primary02,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 3,
-    borderBlockColor: colors.genralWhite,
+    borderColor: colors.genralWhite,
   },
 
-  // avatarIntitials: {
-  //   fontSize: 32,
-  //   fontWeight: "bold",
-  //   color: colors.primary02,
-  // },
   avatarInitials: {
-    fontSize: 32,
+    fontSize: 30,
     fontWeight: "bold",
     color: colors.primary01,
   },
 
   avatarName: {
-    marginTop: 12,
-    fontSize: 20,
+    marginTop: 10,
+    fontSize: 18,
     fontWeight: "700",
     color: colors.genralWhite,
   },
@@ -81,7 +70,6 @@ export const profileStyles = StyleSheet.create({
     marginTop: 4,
   },
 
-  //Other stuff
   card: {
     backgroundColor: colors.primary01,
     borderRadius: 24,
@@ -89,10 +77,6 @@ export const profileStyles = StyleSheet.create({
     gap: 16,
     marginHorizontal: 8,
     shadowColor: colors.authCardShadow,
-    // shadowOffset: { width: 0, height: 0 },
-    // shadowOpacity: 0.3,
-    // shadowRadius: 12,
-    // elevation: 10,
   },
 
   sectionTitle: {
@@ -119,12 +103,6 @@ export const profileStyles = StyleSheet.create({
     fontWeight: "500",
   },
 
-  divder: {
-    height: 1,
-    backgroundColor: colors.authCard,
-    marginVertical: 4,
-  },
-
   inputLabel: {
     fontSize: 12,
     color: colors.registerColor,
@@ -145,7 +123,7 @@ export const profileStyles = StyleSheet.create({
     backgroundColor: colors.primary02,
     padding: 14,
     borderRadius: 10,
-    alignItems: "center" as const,
+    alignItems: "center",
     marginTop: 4,
   },
 
@@ -161,7 +139,7 @@ export const profileStyles = StyleSheet.create({
     borderColor: colors.danger,
     padding: 14,
     borderRadius: 10,
-    alignItems: "center" as const,
+    alignItems: "center",
     marginTop: 4,
   },
 
@@ -185,5 +163,9 @@ export const profileStyles = StyleSheet.create({
     height: 1,
     backgroundColor: "#1a3158",
     marginVertical: 4,
+  },
+  safeArea: {
+    flex: 1,
+    backgroundColor: colors.primary02,
   },
 });

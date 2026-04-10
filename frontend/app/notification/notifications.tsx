@@ -53,6 +53,22 @@ export default function NotificationsScreen() {
     }, [])
   );
 
+  const getNotificationTitle = (item: NotificationItem) => {
+    if (item.type === "favorite") {
+      return item.actor_username
+        ? `${item.actor_username} liked your listing`
+        : "Someone liked your listing";
+    }
+
+    if (item.type === "message") {
+      return item.actor_username
+        ? `${item.actor_username} sent you a message`
+        : "New message";
+    }
+
+    return item.content || "New notification";
+  };
+
   const formatTime = (timestamp: string) => {
     const createdDate = new Date(timestamp);
     const now = new Date();
@@ -153,9 +169,7 @@ export default function NotificationsScreen() {
                   color: "#111",
                 }}
               >
-                {item.actor_username
-                  ? `${item.actor_username} sent you a message`
-                  : "New notification"}
+                {getNotificationTitle(item)}
               </Text>
 
               <Text
@@ -165,7 +179,11 @@ export default function NotificationsScreen() {
                   color: "#666",
                 }}
               >
-                {item.listing_title ?? ""}
+                {item.type === "favorite"
+                  ? item.listing_title ?? ""
+                  : item.type === "message"
+                    ? item.listing_title ?? ""
+                    : item.content}
               </Text>
 
               <Text
