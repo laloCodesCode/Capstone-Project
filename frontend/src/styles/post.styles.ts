@@ -6,17 +6,7 @@ const { height } = Dimensions.get("window");
 export const postStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
-  },
-
-  topHalf: {
-    height: height * 0.3,
-    backgroundColor: colors.primary01,
-  },
-
-  bottomHalf: {
-    flex: 1,
-    backgroundColor: colors.primary02,
+    backgroundColor: "#ffb71d",
   },
 
   formOverlay: {
@@ -24,9 +14,8 @@ export const postStyles = StyleSheet.create({
   },
 
   scrollContainer: {
-    paddingHorizontal: 24,
-    paddingTop: height * 0.18,
-    paddingBottom: 40,
+    paddingHorizontal: 15,
+    paddingBottom: 10,
   },
 
   card: {
@@ -138,5 +127,53 @@ export const postStyles = StyleSheet.create({
     color: colors.textSecondary,
     marginTop: 12,
     marginBottom: 4,
+  },
+  photoRow: {
+    paddingBottom: 8,
+  },
+  
+  photoBox: {
+    width: 100,
+    height: 100,
+    borderRadius: 14,
+    borderWidth: 1.5,
+    borderStyle: "dashed",
+    borderColor: colors.border,
+    backgroundColor: colors.authCard,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 12,
+    overflow: "hidden",
+  },
+  
+  photoBoxImage: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 14,
+  },
+  
+  plus: {
+    fontSize: 34,
+    color: colors.genralWhite,
+    fontWeight: "300",
+  },
+  
+  removeImageButton: {
+    position: "absolute",
+    top: 6,
+    right: 6,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: "rgba(0,0,0,0.7)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  
+  removeImageButtonText: {
+    color: colors.genralWhite,
+    fontSize: 18,
+    lineHeight: 20,
+    fontWeight: "bold",
   },
 });

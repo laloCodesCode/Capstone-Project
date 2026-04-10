@@ -119,19 +119,19 @@ export default function ChatScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#0f2044" }}>
       <View
         style={{
           flexDirection: "row",
           alignItems: "center",
           padding: 12,
           borderBottomWidth: 1,
-          borderColor: "#eee",
-          backgroundColor: "white",
+          borderColor: "#ffb71d",
+          backgroundColor: "#0f2044",
         }}
       >
         <Pressable onPress={() => router.replace("/(tabs)/inbox")}>
-          <Text style={{ fontSize: 16, color: "#0f2044" }}>← Back</Text>
+          <Text style={{ fontSize: 16, color: "white" }}>← Back</Text>
         </Pressable>
 
         {listingId ? (
@@ -164,6 +164,7 @@ export default function ChatScreen() {
         >
           <Text
             style={{
+              color: "white",
               fontSize: 18,
               fontWeight: "600",
             }}
@@ -176,7 +177,7 @@ export default function ChatScreen() {
               <Text
                 style={{
                   marginTop: 2,
-                  color: "#0f2044",
+                  color: "white",
                   fontSize: 14,
                 }}
               >
@@ -189,7 +190,7 @@ export default function ChatScreen() {
 
       <FlatList
         ref={flatListRef}
-        style={{ backgroundColor: "white" }}
+        style={{ backgroundColor: "#0f2044" }}
         data={messages}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
@@ -198,7 +199,7 @@ export default function ChatScreen() {
             text={item.body}
           />
         )}
-        ListEmptyComponent={<Text>No messages yet.</Text>}
+        ListEmptyComponent={<Text style = {{color: "white"}}>No messages yet.</Text>}
         contentContainerStyle={{ padding: 12 }}
       />
 
@@ -207,13 +208,14 @@ export default function ChatScreen() {
           flexDirection: "row",
           padding: 12,
           gap: 8,
-          backgroundColor: "white",
+          backgroundColor: "#0f2044",
         }}
       >
         <TextInput
           value={newMessage}
           onChangeText={setNewMessage}
           placeholder="Type a message..."
+          placeholderTextColor={"white"}
           style={{
             flex: 1,
             borderWidth: 1,

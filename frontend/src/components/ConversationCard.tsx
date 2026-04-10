@@ -58,8 +58,8 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     padding: 14,
-    borderBottomWidth: 1,
-    borderColor: "#eee",
+    borderBottomWidth: 2,
+    borderColor: "#ffb71d",
     alignItems: "center",
   },
 
@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
   },
 
   name: {
+    color: "white",
     fontSize: 16,
     fontWeight: "600",
   },
