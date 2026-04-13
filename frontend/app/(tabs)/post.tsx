@@ -5,7 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function PostScreen() {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffb71d" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffb71d" }} edges={["top"]}>
       <View style={postStyles.container}>
         <View style={postStyles.formOverlay}>
           <PostItemForm />

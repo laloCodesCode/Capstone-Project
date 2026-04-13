@@ -1,47 +1,60 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { colors } from "../styles/colors";
-import { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
+  TouchableOpacity,
   FlatList,
   ActivityIndicator,
-  Image,
-  Dimensions,
-  TouchableOpacity,
 } from "react-native";
+import { useCallback, useState } from "react";
+import { Image } from "expo-image";
+import { MeResponse } from "../types/auth";
 import { itemService } from "../services/item";
 import { favoriteService } from "../services/favorite";
-import { router } from "expo-router";
-import * as SecureStore from "expo-secure-store";
-import { MeResponse } from "../types/auth";
-
+import { useFocusEffect, useRouter } from "expo-router";
 type ProfileTopTabsProps = {
   profile: MeResponse | null;
   logout: () => Promise<void>;
 };
 
-const { width } = Dimensions.get("window");
-const CARD_SIZE = (width - 48) / 2;
+type ListingImage = {
+  id: string;
+  image_url: string;
+  is_primary: boolean;
+};
 
-const BASE_URL = process.env.EXPO_PUBLIC_API_URL;
+type ListingItem = {
+  id: string;
+  title: string;
+  price: number;
+  location: string;
+  status: string;
+  images?: ListingImage[];
+};
+
+type FavoriteItem = {
+  id: string;
+  listing_id: string;
+  user_id: string;
+  created_at: string;
+  title: string;
+  price: number;
+  location: string;
+  status: string;
+  listing_image_url?: string | null;
+};
 
 const Tab = createMaterialTopTabNavigator();
 
-function MyListingsScreen() {
-  const [items, setItems] = useState<any[]>([]);
+function ListingsScreen() {
+
+  const router = useRouter();
+  const [listings, setListings] = useState<ListingItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [hasLoaded, setHasLoaded] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const [token, setToken] = useState<string | null>(null);
-
-  useEffect(() => {
-    const loadToken = async () => {
-      const savedToken = await SecureStore.getItemAsync("token");
-      setToken(savedToken);
-    };
-
-    loadToken();
-  }, []);
+  
 
   const loadListings = useCallback(async (isRefresh = false) => {
     try {
@@ -52,146 +65,115 @@ function MyListingsScreen() {
       }
 
       const data = await itemService.getMyItems();
-      setItems(data);
+      setListings(data);
+      setHasLoaded(true);
     } catch (err) {
-      console.log("ERROR:", err);
+      console.log("ERROR LOADING MY LISTINGS:", err);
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
   }, []);
 
-  useEffect(() => {
-    loadListings();
+  useFocusEffect(
+    useCallback(() => {
+      if (!hasLoaded) {
+        loadListings();
+      }
+    }, [hasLoaded, loadListings])
+  );
+
+  const onRefresh = useCallback(async () => {
+    await loadListings(true);
   }, [loadListings]);
 
   if (loading) {
-    return <ActivityIndicator style={{ marginTop: 20 }} color={colors.primary02} />;
+    return (
+      <ActivityIndicator style={{ marginTop: 20 }} color={colors.primary02} />
+    );
   }
 
-  return (
-    <FlatList
-      data={items}
-      numColumns={2}
-      keyExtractor={(item) => item.id.toString()}
-      columnWrapperStyle={{ gap: 12, paddingHorizontal: 12 }}
-      contentContainerStyle={{
-        paddingTop: 12,
-        paddingBottom: 100,
-        backgroundColor: colors.primary01,
-      }}
-      style={{ backgroundColor: colors.primary01 }}
-      refreshing={refreshing}
-      onRefresh={() => loadListings(true)}
-      renderItem={({ item }) => {
-        
-        const image = item.images?.[0];
-
-        const imageUrl = image?.id
-          ? `${BASE_URL}/listing-image/${image.id}/download?id=${image.id}`
-          : image?.image_url ?? null;
-
-        return (
-          <TouchableOpacity
-            style={{ width: CARD_SIZE, marginBottom: 16 }}
-            onPress={() =>
-              router.push({
-                pathname: "/item/[id]",
-                params: { id: String(item.id) },
-              })
-            }
-          >
-            {imageUrl ? (
-              <Image
-                source={
-                  token
-                    ? {
-                        uri: imageUrl,
-                        headers: {
-                          Authorization: `Bearer ${token}`,
-                        },
-                      }
-                    : { uri: imageUrl }
-                }
-                style={{
-                  width: "100%",
-                  height: CARD_SIZE,
-                  borderRadius: 12,
-                }}
-              />
-            ) : (
-              <View
-                style={{
-                  width: "100%",
-                  height: CARD_SIZE,
-                  borderRadius: 12,
-                  backgroundColor: "#2a2a2a",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Text style={{ color: "white" }}>No Image</Text>
-              </View>
-            )}
-
-            <Text
-              style={{
-                color: "white",
-                fontWeight: "600",
-                marginTop: 6,
-              }}
-              numberOfLines={1}
-            >
-              {item.title}
-            </Text>
-
-            <Text
-              style={{
-                color: colors.primary02,
-                fontWeight: "700",
-              }}
-            >
-              ${item.price}
-            </Text>
-          </TouchableOpacity>
-        );
-      }}
-      ListEmptyComponent={
-        <Text style={{ color: "white", textAlign: "center", marginTop: 20 }}>
-          No listings yet
-        </Text>
-      }
-    />
-  );
-}
-
-function SoldScreen() {
   return (
     <View
       style={{
         flex: 1,
         backgroundColor: colors.primary01,
-        padding: 20,
+        padding: 12,
       }}
     >
-      <Text style={{ color: "white" }}>Sold items coming soon</Text>
+      <FlatList
+        data={listings}
+        keyExtractor={(item) => item.id}
+        numColumns={2}
+        refreshing={refreshing}
+        onRefresh={onRefresh}
+        columnWrapperStyle={{
+          justifyContent: "space-between",
+          marginBottom: 12,
+        }}
+        renderItem={({ item }) => {
+          const primaryImage =
+            item.images?.find((img) => img.is_primary) || item.images?.[0];
+
+          return (
+            <TouchableOpacity
+              activeOpacity={0.85}
+              onPress={() => router.push(`/item/${item.id}`)}
+              style={{
+                width: "48%",
+                backgroundColor: colors.primary02,
+                borderRadius: 12,
+                overflow: "hidden",
+              }}
+            >
+              <Image
+                source={
+                  primaryImage
+                    ? `${process.env.EXPO_PUBLIC_API_URL}/listing-image/${primaryImage.id}/download`
+                    : "https://via.placeholder.com/300x200.png?text=No+Image"
+                }
+                style={{ width: "100%", height: 120 }}
+                contentFit="cover"
+                cachePolicy="memory-disk"
+                transition={200}
+              />
+
+              <View style={{ padding: 10 }}>
+                <Text
+                  style={{ color: "white", fontWeight: "600", fontSize: 15 }}
+                  numberOfLines={1}
+                >
+                  {item.title}
+                </Text>
+
+                <Text style={{ color: "black", marginTop: 4 }}>
+                  ${item.price}
+                </Text>
+
+                <Text style={{ color: "black", marginTop: 2 }} numberOfLines={1}>
+                  {item.location}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          );
+        }}
+        ListEmptyComponent={
+          <Text style={{ color: "#ccc", textAlign: "center", marginTop: 30 }}>
+            No listings yet.
+          </Text>
+        }
+        showsVerticalScrollIndicator={false}
+      />
     </View>
   );
 }
+
 function FavoritesScreen() {
-  const [favorites, setFavorites] = useState<any[]>([]);
+  const router = useRouter();
+  const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [hasLoaded, setHasLoaded] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const [token, setToken] = useState<string | null>(null);
-
-  useEffect(() => {
-    const loadToken = async () => {
-      const savedToken = await SecureStore.getItemAsync("token");
-      setToken(savedToken);
-    };
-
-    loadToken();
-  }, []);
 
   const loadFavorites = useCallback(async (isRefresh = false) => {
     try {
@@ -202,221 +184,101 @@ function FavoritesScreen() {
       }
 
       const data = await favoriteService.getFavorites();
-      console.log("FAVORITES DATA:", JSON.stringify(data, null, 2));
-
-      data.forEach((favorite: any, index: number) => {
-        const listing = favorite.listing ?? favorite;
-        const listingId =
-          favorite?.listing_id ?? listing?.id ?? listing?.listing_id ?? null;
-        const image =
-          listing?.primaryImage ??
-          listing?.primary_image ??
-          favorite?.primaryImage ??
-          favorite?.primary_image ??
-          listing?.images?.find((img: any) => img.is_primary) ??
-          listing?.images?.[0] ??
-          favorite?.images?.find((img: any) => img.is_primary) ??
-          favorite?.images?.[0] ??
-          null;
-
-        const resolvedImageUrl =
-          favorite?.listing_image_url ??
-          image?.image_url ??
-          listing?.image_url ??
-          favorite?.image_url ??
-          (image?.id
-            ? `${BASE_URL}/listing-image/${image.id}/download?id=${image.id}`
-            : null);
-
-        console.log(`FAVORITE ${index}:`, {
-          rawFavorite: favorite,
-          resolvedListingId: listingId,
-          resolvedTitle: listing?.title ?? favorite?.title ?? "Untitled item",
-          resolvedImageUrl,
-          hasImagesArray: Boolean(listing?.images?.length || favorite?.images?.length),
-        });
-      });
-
       setFavorites(data);
+      setHasLoaded(true);
     } catch (err) {
-      console.log("FAVORITES ERROR:", err);
+      console.log("ERROR LOADING FAVORITES:", err);
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
   }, []);
 
-  useEffect(() => {
-    loadFavorites();
+  useFocusEffect(
+    useCallback(() => {
+      if (!hasLoaded) {
+        loadFavorites();
+      }
+    }, [hasLoaded, loadFavorites])
+  );
+
+  const onRefresh = useCallback(async () => {
+    await loadFavorites(true);
   }, [loadFavorites]);
 
   if (loading) {
     return (
-      <ActivityIndicator
-        testID="favorites-loading"
-        style={{ marginTop: 20 }}
-        color={colors.primary02}
-      />
+      <ActivityIndicator style={{ marginTop: 20 }} color={colors.primary02} />
     );
   }
 
   return (
-    <FlatList
-      data={favorites}
-      numColumns={2}
-      keyExtractor={(item) => item.id.toString()}
-      columnWrapperStyle={{ gap: 12, paddingHorizontal: 12 }}
-      contentContainerStyle={{
-        paddingTop: 12,
-        paddingBottom: 100,
+    <View
+      style={{
+        flex: 1,
         backgroundColor: colors.primary01,
+        padding: 12,
       }}
-      style={{ backgroundColor: colors.primary01 }}
-      testID="favorites-list"
-      refreshing={refreshing}
-      onRefresh={() => loadFavorites(true)}
-      renderItem={({ item }) => {
-        const listing = item.listing ?? item;
-        const listingId = item?.listing_id ?? listing?.id ?? listing?.listing_id;
-        const title = listing?.title ?? item?.title ?? "Untitled item";
-        const price = listing?.price ?? item?.price ?? "";
-        const image =
-          listing?.primaryImage ??
-          listing?.primary_image ??
-          item?.primaryImage ??
-          item?.primary_image ??
-          listing?.images?.find((img: any) => img.is_primary) ??
-          listing?.images?.[0] ??
-          item?.images?.find((img: any) => img.is_primary) ??
-          item?.images?.[0] ??
-          null;
-
-        const imageUrl =
-          item?.listing_image_url ??
-          image?.image_url ??
-          listing?.image_url ??
-          item?.image_url ??
-          (image?.id
-            ? `${BASE_URL}/listing-image/${image.id}/download?id=${image.id}`
-            : null);
-
-        return (
+    >
+      <FlatList
+        data={favorites}
+        keyExtractor={(item) => item.id}
+        numColumns={2}
+        refreshing={refreshing}
+        onRefresh={onRefresh}
+        columnWrapperStyle={{
+          justifyContent: "space-between",
+          marginBottom: 12,
+        }}
+        renderItem={({ item }) => (
           <TouchableOpacity
-            testID={`favorite-card-${listingId ?? item.id}`}
-            style={{ width: CARD_SIZE, marginBottom: 16 }}
-            onPress={() => {
-              if (!listingId) {
-                console.log("Missing listing id:", item);
-                console.log("Resolved listing:", listing);
-                return;
-              }
-
-              router.push({
-                pathname: "/item/[id]",
-                params: { id: String(listingId) },
-              });
-            }}
-          >
-            {imageUrl ? (
-              <Image
-                source={
-                  item?.listing_image_url
-                    ? token
-                      ? {
-                          uri: imageUrl,
-                          headers: {
-                            Authorization: `Bearer ${token}`,
-                          },
-                        }
-                      : { uri: imageUrl }
-                    : token && imageUrl?.includes("/listing-image/")
-                      ? {
-                          uri: imageUrl,
-                          headers: {
-                            Authorization: `Bearer ${token}`,
-                          },
-                        }
-                      : { uri: imageUrl }
-                }
-                style={{
-                  width: "100%",
-                  height: CARD_SIZE,
-                  borderRadius: 12,
-                }}
-              />
-            ) : (
-              <View
-                testID={`favorite-no-image-${listingId ?? item.id}`}
-                style={{
-                  width: "100%",
-                  height: CARD_SIZE,
-                  borderRadius: 12,
-                  backgroundColor: "#2a2a2a",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  paddingHorizontal: 10,
-                }}
-              >
-                <Text style={{ color: "white", textAlign: "center" }}>
-                  No Image
-                </Text>
-                <Text
-                  style={{
-                    color: "#bbb",
-                    textAlign: "center",
-                    fontSize: 12,
-                    marginTop: 4,
-                  }}
-                >
-                  {imageUrl ? "Image failed to render" : "Missing image URL"}
-                </Text>
-              </View>
-            )}
-
-            <Text
-              testID={`favorite-title-${listingId ?? item.id}`}
-              style={{
-                color: "white",
-                fontWeight: "600",
-                marginTop: 6,
-              }}
-              numberOfLines={1}
-            >
-              {title}
-            </Text>
-
-            <Text
-              testID={`favorite-price-${listingId ?? item.id}`}
-              style={{
-                color: colors.primary02,
-                fontWeight: "700",
-              }}
-            >
-              ${price}
-            </Text>
-          </TouchableOpacity>
-        );
-      }}
-      ListEmptyComponent={
-        <View testID="favorites-empty" style={{ marginTop: 20, paddingHorizontal: 20 }}>
-          <Text style={{ color: "white", textAlign: "center" }}>
-            No favorites yet
-          </Text>
-          <Text
+            activeOpacity={0.85}
+            onPress={() => router.push(`/item/${item.listing_id}`)}
             style={{
-              color: "#bbb",
-              textAlign: "center",
-              marginTop: 6,
-              fontSize: 12,
+              width: "48%",
+              backgroundColor: colors.primary02,
+              borderRadius: 12,
+              overflow: "hidden",
             }}
           >
-            Pull down to refresh. Check the console logs for resolved listing IDs and image URLs.
+            <Image
+              source={
+                item.listing_image_url ||
+                "https://via.placeholder.com/300x200.png?text=No+Image"
+              }
+              style={{ width: "100%", height: 120 }}
+              contentFit="cover"
+              cachePolicy="memory-disk"
+              transition={200}
+            />
+
+            <View style={{ padding: 10 }}>
+              <Text
+                style={{ color: "white", fontWeight: "600", fontSize: 15 }}
+                numberOfLines={1}
+              >
+                {item.title}
+              </Text>
+
+              <Text style={{ color: "black", marginTop: 4 }}>${item.price}</Text>
+
+              <Text style={{ color: "black", marginTop: 2 }} numberOfLines={1}>
+                {item.location}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        )}
+        ListEmptyComponent={
+          <Text style={{ color: "#ccc", textAlign: "center", marginTop: 30 }}>
+            No favorites yet.
           </Text>
-        </View>
-      }
-    />
+        }
+        showsVerticalScrollIndicator={false}
+      />
+    </View>
   );
 }
+
 function SettingsScreen({
   profile,
   logout,
@@ -470,6 +332,8 @@ export default function ProfileTopTabs({
       id="ProfileTopTabs"
       screenOptions={{
         tabBarScrollEnabled: true,
+        lazy: true,
+        lazyPreloadDistance: 0,
         tabBarStyle: {
           backgroundColor: colors.primary01,
         },
@@ -487,10 +351,11 @@ export default function ProfileTopTabs({
         },
         sceneStyle: {
           backgroundColor: colors.primary01,
+          overflow: "hidden",
         },
       }}
     >
-      <Tab.Screen name="Listings" component={MyListingsScreen} />
+      <Tab.Screen name="Listings" component={ListingsScreen} />
       <Tab.Screen name="Favorites" component={FavoritesScreen} />
       <Tab.Screen name="Settings">
         {() => <SettingsScreen profile={profile} logout={logout} />}

@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   },
 
   myMessage: {
-    backgroundColor: "#0f2044",
+    backgroundColor: "#ffb71d",
     alignSelf: "flex-end",
   },
 
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   },
 
   myText: {
-    color: "#fff",
+    color: "black",
   },
 
   otherText: {

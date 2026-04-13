@@ -5,8 +5,8 @@ import {
   Text,
   Pressable,
   ActivityIndicator,
-  Image,
 } from "react-native";
+import { Image } from "expo-image";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -120,7 +120,6 @@ export default function NotificationsScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#0f2044" }}>
-      {/* HEADER */}
       <View
         style={{
           paddingHorizontal: 16,
@@ -132,18 +131,17 @@ export default function NotificationsScreen() {
       >
         <Pressable
           onPress={() => router.back()}
-          style={{ marginRight: 12, flexDirection: "row", alignItems: "center"  }}
+          style={{ marginRight: 12, flexDirection: "row", alignItems: "center" }}
         >
           <Ionicons name="chevron-back" size={24} color="white" />
           <Text style={{ fontSize: 16, color: "white" }}>Back</Text>
         </Pressable>
 
-        <Text style={{ fontSize: 20, fontWeight: "700", color: "white"}}>
+        <Text style={{ fontSize: 20, fontWeight: "700", color: "white" }}>
           Notifications
         </Text>
       </View>
 
-      {/* LIST */}
       <FlatList
         data={notifications}
         keyExtractor={(item) => item.id}
@@ -154,19 +152,18 @@ export default function NotificationsScreen() {
               paddingHorizontal: 16,
               paddingVertical: 14,
               borderBottomWidth: 1,
-              borderColor: "#eee",
-              backgroundColor: item.is_read ? "white" : "#f8fbff",
+              borderColor: "#1f3b73",
+              backgroundColor: item.is_read ? "#16356b" : "#1d4485",
               flexDirection: "row",
               alignItems: "center",
             }}
           >
-            {/* LEFT SIDE TEXT */}
             <View style={{ flex: 1, marginRight: 12 }}>
               <Text
                 style={{
                   fontSize: 16,
                   fontWeight: "700",
-                  color: "#111",
+                  color: "white",
                 }}
               >
                 {getNotificationTitle(item)}
@@ -176,7 +173,7 @@ export default function NotificationsScreen() {
                 style={{
                   marginTop: 4,
                   fontSize: 14,
-                  color: "#666",
+                  color: "#d6e4ff",
                 }}
               >
                 {item.type === "favorite"
@@ -190,31 +187,32 @@ export default function NotificationsScreen() {
                 style={{
                   marginTop: 2,
                   fontSize: 12,
-                  color: "#999",
+                  color: "#a9c1ef",
                 }}
               >
                 {formatTime(item.created_at)}
               </Text>
             </View>
 
-            {/* RIGHT SIDE IMAGE */}
             {item.listing_image_url && (
               <Image
-                source={{ uri: item.listing_image_url }}
+                source={item.listing_image_url}
                 style={{
                   width: 50,
                   height: 50,
                   borderRadius: 8,
                   backgroundColor: "#ddd",
                 }}
-                resizeMode="cover"
+                contentFit="cover"
+                cachePolicy="memory-disk"
+                transition={200}
               />
             )}
           </Pressable>
         )}
         ListEmptyComponent={
           <View style={{ padding: 20, alignItems: "center" }}>
-            <Text style= {{color:"white"}}>No notifications yet.</Text>
+            <Text style={{ color: "white" }}>No notifications yet.</Text>
           </View>
         }
       />

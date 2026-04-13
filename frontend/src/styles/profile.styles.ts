@@ -66,7 +66,7 @@ export const profileStyles = StyleSheet.create({
 
   avatarUsername: {
     fontSize: 14,
-    color: colors.registerColor,
+    color: colors.primary01,
     marginTop: 4,
   },
 

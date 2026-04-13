@@ -190,7 +190,7 @@ export default function ChatScreen() {
 
       <FlatList
         ref={flatListRef}
-        style={{ backgroundColor: "#0f2044" }}
+        style={{ backgroundColor: "#white" }}
         data={messages}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
@@ -217,6 +217,7 @@ export default function ChatScreen() {
           placeholder="Type a message..."
           placeholderTextColor={"white"}
           style={{
+            color: "white",
             flex: 1,
             borderWidth: 1,
             borderColor: "#ccc",
