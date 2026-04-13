@@ -35,15 +35,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     authService.getToken().then(async (token) => {
-      if (token) {
-        try {
-          const me = await authService.getMe();
-          setUser({ token, is_admin: me.is_admin });
-        } catch {
-          setUser({ token, is_admin: false });
-        }
+      if (!token) {
+        setUser(null);
+        setLoading(false);
+        return;
       }
-      setLoading(false);
+  
+      try {
+        const me = await authService.getMe();
+        setUser({ token, is_admin: me.is_admin });
+      } catch {
+        await authService.logout();
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
     });
   }, []);
 

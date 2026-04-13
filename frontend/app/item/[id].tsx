@@ -7,18 +7,22 @@ import {
   Text,
   View,
   Pressable,
-  TouchableOpacity
+  TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import * as SecureStore from "expo-secure-store";
+import { Ionicons } from "@expo/vector-icons";
 
 import { itemService } from "../../src/services/item";
+import { favoriteService } from "../../src/services/favorite";
 import { ItemResponse } from "../../src/types/item";
 import { colors } from "../../src/styles/colors";
 import { router } from "expo-router";
-
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL;
+const { width } = Dimensions.get("window");
 
 export default function ItemDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -29,6 +33,10 @@ export default function ItemDetailsScreen() {
   const [error, setError] = useState("");
   const [threadLoading, setThreadLoading] = useState(false);
 
+  const [isFavorited, setIsFavorited] = useState(false);
+  const [favoriteLoading, setFavoriteLoading] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+
   useEffect(() => {
     const loadToken = async () => {
       const savedToken = await SecureStore.getItemAsync("token");
@@ -38,6 +46,67 @@ export default function ItemDetailsScreen() {
     loadToken();
   }, []);
 
+  useEffect(() => {
+    const loadItem = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        if (!id) {
+          throw new Error("Missing item ID");
+        }
+
+        const data = await itemService.getItemById(id);
+        setItem(data);
+      } catch (err: any) {
+        console.error("Error loading item details:", err);
+        setError(err.message || "Failed to load item details");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadItem();
+  }, [id]);
+
+  useEffect(() => {
+    const loadFavoriteStatus = async () => {
+      if (!id) return;
+
+      try {
+        const favorites = await favoriteService.getFavorites();
+        const favorited = favorites.some(
+          (favorite: any) => favorite.listing_id === id
+        );
+        setIsFavorited(favorited);
+      } catch (err: any) {
+        console.log("FAVORITE STATUS ERROR:", err?.message || err);
+      }
+    };
+
+    loadFavoriteStatus();
+  }, [id]);
+
+  const handleFavoriteToggle = async () => {
+    if (!id || favoriteLoading) return;
+
+    try {
+      setFavoriteLoading(true);
+
+      if (isFavorited) {
+        await favoriteService.removeFavorite(id);
+        setIsFavorited(false);
+      } else {
+        await favoriteService.addFavorite(id);
+        setIsFavorited(true);
+      }
+    } catch (err: any) {
+      console.log("FAVORITE TOGGLE ERROR:", err?.message || err);
+      setError(err.message || "Failed to update favorite");
+    } finally {
+      setFavoriteLoading(false);
+    }
+  };
 
   const createThread = async () => {
     try {
@@ -86,31 +155,6 @@ export default function ItemDetailsScreen() {
     }
   };
 
-
-
-  useEffect(() => {
-    const loadItem = async () => {
-      try {
-        setLoading(true);
-        setError("");
-
-        if (!id) {
-          throw new Error("Missing item ID");
-        }
-
-        const data = await itemService.getItemById(id);
-        setItem(data);
-      } catch (err: any) {
-        console.error("Error loading item details:", err);
-        setError(err.message || "Failed to load item details");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadItem();
-  }, [id]);
-
   if (loading) {
     return (
       <View style={styles.centered}>
@@ -127,23 +171,33 @@ export default function ItemDetailsScreen() {
     );
   }
 
-  const primaryImage =
-    item.images?.find((img) => img.is_primary) || item.images?.[0];
+  const imageUrls =
+  item.images?.map(
+    (img) => `${BASE_URL}/listing-image/${img.id}/download?id=${img.id}`
+  ) || [];
 
-  const downloadUrl =
-    primaryImage
-      ? `${BASE_URL}/listing-image/${primaryImage.id}/download?id=${primaryImage.id}`
-      : null;
-
-  console.log("TOKEN:", token);
-  console.log("DOWNLOAD URL:", downloadUrl);
+const downloadUrl = imageUrls[0] ?? null;
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {downloadUrl && token ? (
+    <SafeAreaView style = {{flex: 1, backgroundColor: "#0f2044"}}>
+      <ScrollView contentContainerStyle={styles.container}>
+      {imageUrls.length > 0 && token ? (
+  <View>
+    <ScrollView
+      horizontal
+      pagingEnabled
+      showsHorizontalScrollIndicator={false}
+      onScroll={(e) => {
+        const index = Math.round(e.nativeEvent.contentOffset.x / width);
+        setActiveIndex(index);
+      }}
+      scrollEventThrottle={16}
+    >
+      {imageUrls.map((url, index) => (
         <Image
+          key={index}
           source={{
-            uri: downloadUrl,
+            uri: url,
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -151,20 +205,50 @@ export default function ItemDetailsScreen() {
           style={styles.image}
           resizeMode="cover"
         />
-      ) : (
-        <Text style={styles.text}>No image available</Text>
-      )}
+      ))}
+    </ScrollView>
+
+    <View style={styles.dotsContainer}>
+      {imageUrls.map((_, index) => (
+        <View
+          key={index}
+          style={[styles.dot, activeIndex === index && styles.activeDot]}
+        />
+      ))}
+    </View>
+  </View>
+) : (
+  <Text style={styles.text}>No image available</Text>
+)}
 
       <View style={styles.card}>
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.price}>${item.price}</Text>
+        <View style={styles.titleRow}>
+          <View style={{ flex: 1, marginRight: 12 }}>
+            <Text style={styles.title}>{item.title}</Text>
+            <Text style={styles.price}>${item.price}</Text>
+          </View>
+
+          <Pressable
+            onPress={handleFavoriteToggle}
+            disabled={favoriteLoading}
+            style={styles.favoriteButton}
+          >
+            {favoriteLoading ? (
+              <ActivityIndicator size="small" color="#e53935" />
+            ) : (
+              <Ionicons
+                name={isFavorited ? "heart" : "heart-outline"}
+                size={30}
+                color={isFavorited ? "#e53935" : "#0f2044"}
+              />
+            )}
+          </Pressable>
+        </View>
 
         <Text style={styles.sectionTitle}>Item Information:</Text>
         <Text style={styles.text}>Description: {item.description}</Text>
         <Text style={styles.text}>Condition: {item.condition}</Text>
         <Text style={styles.text}>Located at: {item.location}</Text>
-
-
 
         {item.seller && (
           <>
@@ -185,16 +269,14 @@ export default function ItemDetailsScreen() {
             <Text style={styles.contactButtonText}>Contact Seller</Text>
           )}
         </TouchableOpacity>
-
       </View>
 
-      <Pressable
-        style={styles.itemPageButton}
-        onPress={() => router.back()}
-      >
+      <Pressable style={styles.itemPageButton} onPress={() => router.back()}>
         <Text style={styles.itemPageButtonText}>Go Back</Text>
       </Pressable>
     </ScrollView>
+    </SafeAreaView>
+    
   );
 }
 
@@ -203,7 +285,6 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "#0f2044",
     flexGrow: 1,
-    marginTop: 70,
   },
   centered: {
     flex: 1,
@@ -224,9 +305,21 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   image: {
-    width: "100%",
+    width: width - 40,
     height: 300,
     borderRadius: 12,
+    marginRight: 0,
+  },
+  
+  titleRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+  },
+  favoriteButton: {
+    padding: 4,
+    alignItems: "center",
+    justifyContent: "center",
   },
   title: {
     fontSize: 24,
@@ -269,7 +362,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
-
   contactButton: {
     marginTop: 20,
     backgroundColor: colors.primary01,
@@ -277,10 +369,26 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: "center",
   },
-
   contactButtonText: {
     color: colors.primary02,
     fontSize: 16,
     fontWeight: "600",
+  },
+  dotsContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 10,
+  },
+  
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: "#7a7a7a",
+    marginHorizontal: 4,
+  },
+  
+  activeDot: {
+    backgroundColor: "#ffffff",
   },
 });

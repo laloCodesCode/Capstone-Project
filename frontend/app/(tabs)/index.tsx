@@ -19,6 +19,7 @@ import { ItemResponse } from "../../src/types/item";
 import { categoryService } from "../../src/services/category";
 import { CategoryResponse } from "../../src/types/category";
 import { colors } from "../../src/styles/colors";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
   const [items, setItems] = useState<ItemResponse[]>([]);
@@ -115,79 +116,83 @@ export default function HomeScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.searchSection}>
-        <TextInput
-          placeholder="Search items..."
-          placeholderTextColor={colors.textSecondary}
-          value={searchText}
-          onChangeText={setSearchText}
-          onSubmitEditing={handleSearchSubmit}
-          style={styles.searchInput}
-          returnKeyType="search"
-        />
-
-        <Pressable
-          style={styles.dropdownButton}
-          onPress={() => setDropdownVisible(true)}
-        >
-          <Text style={styles.dropdownButtonText}>
-            {selectedCategory ? selectedCategory.name : "All Categories"}
-          </Text>
-          <Text style={styles.dropdownArrow}>▼</Text>
-        </Pressable>
-      </View>
-
-      <FlatList
-        data={items}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <ItemListingCard item={item} />}
-        numColumns={2}
-        columnWrapperStyle={styles.row}
-        contentContainerStyle={styles.listContent}
-        refreshControl={
-          <RefreshControl refreshing={refreshing}
-          onRefresh={handleRefresh}
-          tintColor={colors.primary02} />
-        }
-        ListEmptyComponent={
-          <Text style={styles.emptyText}>No items listed yet.</Text>
-        }
-      />
-
-      <Modal
-        visible={dropdownVisible}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setDropdownVisible(false)}
-      >
-        <Pressable
-          style={styles.modalOverlay}
-          onPress={() => setDropdownVisible(false)}
-        >
-          <Pressable style={styles.dropdownMenu} onPress={() => { }}>
-            <ScrollView showsVerticalScrollIndicator={true}>
-              <TouchableOpacity
-                style={styles.dropdownItem}
-                onPress={clearCategoryFilter}
-              >
-                <Text style={styles.dropdownItemText}>All Categories</Text>
-              </TouchableOpacity>
-
-              {childCategories.map((category) => (
-                <TouchableOpacity
-                  key={category.id}
-                  style={styles.dropdownItem}
-                  onPress={() => handleCategorySelect(category.id)}
-                >
-                  <Text style={styles.dropdownItemText}>{category.name}</Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.primary01 }} edges={["top"]}>
+      <View style={styles.container}>
+        <View style={styles.searchSection}>
+          <TextInput
+            placeholder="Search items..."
+            placeholderTextColor={colors.textSecondary}
+            value={searchText}
+            onChangeText={setSearchText}
+            onSubmitEditing={handleSearchSubmit}
+            style={styles.searchInput}
+            returnKeyType="search"
+          />
+  
+          <Pressable
+            style={styles.dropdownButton}
+            onPress={() => setDropdownVisible(true)}
+          >
+            <Text style={styles.dropdownButtonText}>
+              {selectedCategory ? selectedCategory.name : "All Categories"}
+            </Text>
+            <Text style={styles.dropdownArrow}>▼</Text>
           </Pressable>
-        </Pressable>
-      </Modal>
-    </View>
+        </View>
+  
+        <FlatList
+          data={items}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <ItemListingCard item={item} />}
+          numColumns={2}
+          columnWrapperStyle={styles.row}
+          contentContainerStyle={styles.listContent}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={handleRefresh}
+              tintColor={colors.primary02}
+            />
+          }
+          ListEmptyComponent={
+            <Text style={styles.emptyText}>No items listed yet.</Text>
+          }
+        />
+  
+        <Modal
+          visible={dropdownVisible}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setDropdownVisible(false)}
+        >
+          <Pressable
+            style={styles.modalOverlay}
+            onPress={() => setDropdownVisible(false)}
+          >
+            <Pressable style={styles.dropdownMenu} onPress={() => {}}>
+              <ScrollView showsVerticalScrollIndicator>
+                <TouchableOpacity
+                  style={styles.dropdownItem}
+                  onPress={clearCategoryFilter}
+                >
+                  <Text style={styles.dropdownItemText}>All Categories</Text>
+                </TouchableOpacity>
+  
+                {childCategories.map((category) => (
+                  <TouchableOpacity
+                    key={category.id}
+                    style={styles.dropdownItem}
+                    onPress={() => handleCategorySelect(category.id)}
+                  >
+                    <Text style={styles.dropdownItemText}>{category.name}</Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </Pressable>
+          </Pressable>
+        </Modal>
+      </View>
+    </SafeAreaView>
   );
 }
 
@@ -197,7 +202,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#0f2044",
   },
   searchSection: {
-    marginTop: 20,
     paddingHorizontal: 16,
     paddingTop: 16,
     paddingBottom: 8,

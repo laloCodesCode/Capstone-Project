@@ -31,7 +31,7 @@ export default function PostItemForm() {
   const [selectedParentId, setSelectedParentId] = useState("");
   const [selectedChildId, setSelectedChildId] = useState("");
 
-  const [image, setImage] = useState<any>(null);
+  const [images, setImages] = useState<any[]>([]);
   const [openCamera, setOpenCamera] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -57,7 +57,7 @@ export default function PostItemForm() {
   const parentCategories = categories.filter(
     (category) => category.parent_id === null
   );
-  
+
   const childCategories = categories.filter(
     (category) => category.parent_id === selectedParentId
   );
@@ -101,14 +101,18 @@ export default function PostItemForm() {
 
       const item = await itemService.createItem(itemPayload);
 
-      if (image) {
-        const imageFile = {
-          uri: image.uri,
-          name: image.filename || "item.jpg",
-          type: image.mimeType || "image/jpeg",
-        };
-
-        await itemService.uploadImage(item.id, imageFile, true);
+      if (images.length > 0) {
+        for (let i = 0; i < images.length; i++) {
+          const currentImage = images[i];
+      
+          const imageFile = {
+            uri: currentImage.uri,
+            name: currentImage.fileName || currentImage.filename || `item-${i}.jpg`,
+            type: currentImage.mimeType || "image/jpeg",
+          };
+      
+          await itemService.uploadImage(item.id, imageFile, i === 0);
+        }
       }
 
       setSuccessMessage("Item posted successfully!");
@@ -119,7 +123,7 @@ export default function PostItemForm() {
       setLocation("");
       setSelectedParentId("");
       setSelectedChildId("");
-      setImage(null);
+      setImages([]);
 
       console.log("Item created:", item);
     } catch (error: any) {
@@ -131,6 +135,8 @@ export default function PostItemForm() {
   };
 
   const pickImage = async () => {
+    if (images.length >= 8) return;
+
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
       allowsEditing: true,
@@ -138,8 +144,12 @@ export default function PostItemForm() {
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0]);
+      setImages((prev) => [...prev, result.assets[0]]);
     }
+  };
+
+  const removeImage = (indexToRemove: number) => {
+    setImages((prev) => prev.filter((_, index) => index !== indexToRemove));
   };
 
   if (openCamera) {
@@ -147,7 +157,7 @@ export default function PostItemForm() {
       <CameraCapture
         onPhotoTaken={(photo: any) => {
           console.log("Photo taken:", photo);
-          setImage(photo);
+          setImages((prev) => (prev.length < 8 ? [...prev, photo] : prev));
           setOpenCamera(false);
         }}
         onClose={() => setOpenCamera(false)}
@@ -157,7 +167,6 @@ export default function PostItemForm() {
 
   console.log("parentCategories:", parentCategories);
   console.log("CATEGORIES FROM API:", categories);
-
 
   return (
     <KeyboardAvoidingView
@@ -180,6 +189,62 @@ export default function PostItemForm() {
           {errorMessage ? (
             <Text style={postStyles.errorText}>{errorMessage}</Text>
           ) : null}
+
+          <Text style={postStyles.label}>Add photos ({images.length}/8)</Text>
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={postStyles.photoRow}
+          >
+            {Array.from({ length: 8 }).map((_, index) => {
+              const photo = images[index];
+
+              return (
+                <TouchableOpacity
+                  key={index}
+                  style={postStyles.photoBox}
+                  onPress={() => {
+                    if (!photo) pickImage();
+                  }}
+                  activeOpacity={0.8}
+                >
+                  {photo ? (
+                    <View style={{ width: "100%", height: "100%" }}>
+                      <Image
+                        source={{ uri: photo.uri }}
+                        style={postStyles.photoBoxImage}
+                      />
+                      <TouchableOpacity
+                        onPress={() => removeImage(index)}
+                        style={postStyles.removeImageButton}
+                      >
+                        <Text style={postStyles.removeImageButtonText}>×</Text>
+                      </TouchableOpacity>
+                    </View>
+                  ) : (
+                    <Text style={postStyles.plus}>+</Text>
+                  )}
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+
+          <TouchableOpacity
+            style={postStyles.secondaryButton}
+            onPress={() => setOpenCamera(true)}
+          >
+            <Text style={postStyles.secondaryButtonText}>Take Photo</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={postStyles.secondaryButton}
+            onPress={pickImage}
+          >
+            <Text style={postStyles.secondaryButtonText}>
+              Choose From Library
+            </Text>
+          </TouchableOpacity>
 
           <TextInput
             placeholder="Title"
@@ -271,26 +336,6 @@ export default function PostItemForm() {
               ))}
             </Picker>
           </View>
-
-          {image && (
-            <Image source={{ uri: image.uri }} style={postStyles.imagePreview} />
-          )}
-
-          <TouchableOpacity
-            style={postStyles.secondaryButton}
-            onPress={() => setOpenCamera(true)}
-          >
-            <Text style={postStyles.secondaryButtonText}>Take Photo</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={postStyles.secondaryButton}
-            onPress={pickImage}
-          >
-            <Text style={postStyles.secondaryButtonText}>
-              Choose From Library
-            </Text>
-          </TouchableOpacity>
 
           <TouchableOpacity
             style={postStyles.primaryButton}
