@@ -16,7 +16,7 @@ from backend.app.crud.user import create_user, get_user_by_school_email_or_usern
 from backend.app.db.dependencies import get_current_user, get_db
 from backend.app.models import User
 from backend.app.schemas import UserRegister, UserResponse
-
+from backend.app.config.settings import settings
 auth_router = APIRouter(prefix="/auth", tags=["auth"])
 
 
@@ -79,6 +79,11 @@ def me(current_user: User = Depends(get_current_user)):
         "username": current_user.username,
         "school_email": current_user.school_email,
         "is_admin": current_user.is_admin,
+        "profile_image_url": (
+            f"{settings.BACKEND_BASE_URL}/users/{current_user.id}/profile-image"
+            if current_user.profile_image_url
+            else None
+        ),
     }
 
 
