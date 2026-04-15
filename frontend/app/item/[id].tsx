@@ -172,111 +172,123 @@ export default function ItemDetailsScreen() {
   }
 
   const imageUrls =
-  item.images?.map(
-    (img) => `${BASE_URL}/listing-image/${img.id}/download?id=${img.id}`
-  ) || [];
+    item.images?.map(
+      (img) => `${BASE_URL}/listing-image/${img.id}/download?id=${img.id}`
+    ) || [];
 
-const downloadUrl = imageUrls[0] ?? null;
+  const downloadUrl = imageUrls[0] ?? null;
 
   return (
-    <SafeAreaView style = {{flex: 1, backgroundColor: "#0f2044"}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#0f2044" }}>
       <ScrollView contentContainerStyle={styles.container}>
-      {imageUrls.length > 0 && token ? (
-  <View>
-    <ScrollView
-      horizontal
-      pagingEnabled
-      showsHorizontalScrollIndicator={false}
-      onScroll={(e) => {
-        const index = Math.round(e.nativeEvent.contentOffset.x / width);
-        setActiveIndex(index);
-      }}
-      scrollEventThrottle={16}
-    >
-      {imageUrls.map((url, index) => (
-        <Image
-          key={index}
-          source={{
-            uri: url,
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }}
-          style={styles.image}
-          resizeMode="cover"
-        />
-      ))}
-    </ScrollView>
+        {imageUrls.length > 0 && token ? (
+          <View>
+            <ScrollView
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              onScroll={(e) => {
+                const index = Math.round(e.nativeEvent.contentOffset.x / width);
+                setActiveIndex(index);
+              }}
+              scrollEventThrottle={16}
+            >
+              {imageUrls.map((url, index) => (
+                <Image
+                  key={index}
+                  source={{
+                    uri: url,
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                    },
+                  }}
+                  style={styles.image}
+                  resizeMode="cover"
+                />
+              ))}
+            </ScrollView>
 
-    <View style={styles.dotsContainer}>
-      {imageUrls.map((_, index) => (
-        <View
-          key={index}
-          style={[styles.dot, activeIndex === index && styles.activeDot]}
-        />
-      ))}
-    </View>
-  </View>
-) : (
-  <Text style={styles.text}>No image available</Text>
-)}
-
-      <View style={styles.card}>
-        <View style={styles.titleRow}>
-          <View style={{ flex: 1, marginRight: 12 }}>
-            <Text style={styles.title}>{item.title}</Text>
-            <Text style={styles.price}>${item.price}</Text>
+            <View style={styles.dotsContainer}>
+              {imageUrls.map((_, index) => (
+                <View
+                  key={index}
+                  style={[
+                    styles.dot,
+                    activeIndex === index && styles.activeDot,
+                  ]}
+                />
+              ))}
+            </View>
           </View>
-
-          <Pressable
-            onPress={handleFavoriteToggle}
-            disabled={favoriteLoading}
-            style={styles.favoriteButton}
-          >
-            {favoriteLoading ? (
-              <ActivityIndicator size="small" color="#e53935" />
-            ) : (
-              <Ionicons
-                name={isFavorited ? "heart" : "heart-outline"}
-                size={30}
-                color={isFavorited ? "#e53935" : "#0f2044"}
-              />
-            )}
-          </Pressable>
-        </View>
-
-        <Text style={styles.sectionTitle}>Item Information:</Text>
-        <Text style={styles.text}>Description: {item.description}</Text>
-        <Text style={styles.text}>Condition: {item.condition}</Text>
-        <Text style={styles.text}>Located at: {item.location}</Text>
-
-        {item.seller && (
-          <>
-            <Text style={styles.sectionTitle}>Seller</Text>
-            <Text style={styles.text}>Name: {item.seller.username}</Text>
-            <Text style={styles.text}>Email: {item.seller.school_email}</Text>
-          </>
+        ) : (
+          <Text style={styles.text}>No image available</Text>
         )}
 
-        <TouchableOpacity
-          style={styles.contactButton}
-          onPress={createThread}
-          disabled={threadLoading}
-        >
-          {threadLoading ? (
-            <ActivityIndicator color={colors.genralWhite} />
-          ) : (
-            <Text style={styles.contactButtonText}>Contact Seller</Text>
-          )}
-        </TouchableOpacity>
-      </View>
+        <View style={styles.card}>
+          <View style={styles.titleRow}>
+            <View style={{ flex: 1, marginRight: 12 }}>
+              <Text style={styles.title}>{item.title}</Text>
+              <Text style={styles.price}>${item.price}</Text>
+            </View>
 
-      <Pressable style={styles.itemPageButton} onPress={() => router.back()}>
-        <Text style={styles.itemPageButtonText}>Go Back</Text>
-      </Pressable>
-    </ScrollView>
+            <Pressable
+              onPress={handleFavoriteToggle}
+              disabled={favoriteLoading}
+              style={styles.favoriteButton}
+            >
+              {favoriteLoading ? (
+                <ActivityIndicator size="small" color="#e53935" />
+              ) : (
+                <Ionicons
+                  name={isFavorited ? "heart" : "heart-outline"}
+                  size={30}
+                  color={isFavorited ? "#e53935" : "#0f2044"}
+                />
+              )}
+            </Pressable>
+          </View>
+
+          <Text style={styles.sectionTitle}>Item Information:</Text>
+          <Text style={styles.text}>Description: {item.description}</Text>
+          <Text style={styles.text}>Condition: {item.condition}</Text>
+          <Text style={styles.text}>Located at: {item.location}</Text>
+
+          {item.seller && (
+            <>
+              <Text style={styles.sectionTitle}>Seller</Text>
+
+              <TouchableOpacity
+                onPress={() => router.push(`/user/${item.seller.id}`)}
+              >
+                <Text
+                  style={[styles.text, { color: "#0f2044", fontWeight: "700" }]}
+                >
+                  Name: {item.seller.username}
+                </Text>
+              </TouchableOpacity>
+
+              <Text style={styles.text}>Email: {item.seller.school_email}</Text>
+            </>
+          )}
+
+          <TouchableOpacity
+            style={styles.contactButton}
+            onPress={createThread}
+            disabled={threadLoading}
+          >
+            {threadLoading ? (
+              <ActivityIndicator color={colors.genralWhite} />
+            ) : (
+              <Text style={styles.contactButtonText}>Contact Seller</Text>
+            )}
+          </TouchableOpacity>
+        </View>
+
+        <Pressable style={styles.itemPageButton} onPress={() => router.back()}>
+          <Text style={styles.itemPageButtonText}>Go Back</Text>
+        </Pressable>
+      </ScrollView>
     </SafeAreaView>
-    
   );
 }
 
@@ -310,7 +322,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginRight: 0,
   },
-  
+
   titleRow: {
     flexDirection: "row",
     alignItems: "flex-start",
@@ -379,7 +391,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 10,
   },
-  
+
   dot: {
     width: 8,
     height: 8,
@@ -387,7 +399,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#7a7a7a",
     marginHorizontal: 4,
   },
-  
+
   activeDot: {
     backgroundColor: "#ffffff",
   },

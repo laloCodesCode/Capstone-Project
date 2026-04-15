@@ -19,6 +19,7 @@ class User(Base):
         unique=True,
         nullable=False,
     )
+    profile_image_url: Mapped[str | None] = mapped_column(nullable=True)
     is_admin: Mapped[bool] = mapped_column(default=False, nullable=False)
     is_banned: Mapped[bool] = mapped_column(default=False, nullable=False)
     school_email: Mapped[str] = mapped_column(unique=True, nullable=False)

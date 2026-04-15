@@ -2,7 +2,9 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session
 
+from backend.app.crud.notification import create_notification
 from backend.app.models.favorite import Favorite
+from backend.app.models.listing import Listing
 
 
 def get_favorite_by_user_and_listing(
@@ -28,8 +30,20 @@ def create_favorite(db: Session, user_id: UUID, listing_id: UUID) -> Favorite:
     db.add(favorite)
     db.commit()
     db.refresh(favorite)
-    return favorite
 
+    listing = db.query(Listing).filter(Listing.id == listing_id).first()
+
+    if listing and listing.seller_id != user_id:
+        create_notification(
+            db=db,
+            user_id=listing.seller_id,
+            actor_user_id=user_id,
+            listing_id=listing_id,
+            type="favorite",
+            content="favorite",
+        )
+
+    return favorite
 
 def get_user_favorites(db: Session, user_id: UUID) -> list[type[Favorite]]:
     return (
