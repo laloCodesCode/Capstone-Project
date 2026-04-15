@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, Image, Pressable } from "react-native";
-
+import { View, Text, StyleSheet, Pressable } from "react-native";
+import { Image } from "expo-image";
 type Props = {
   name: string;
   lastMessage: string;
@@ -23,11 +23,14 @@ export default function ConversationCard({
 }: Props) {
   return (
     <Pressable style={styles.container} onPress={onPress}>
-      <Image
-        source={{ uri: avatar }}
-        style={styles.avatar}
-        resizeMode="cover"
-      />
+     <Image
+  source={avatar}
+  style={styles.avatar}
+  contentFit="cover"
+  cachePolicy="memory-disk"
+  placeholder="https://via.placeholder.com/20"
+  transition={200}
+/>
 
 <View style={styles.middle}>
         <Text style={styles.name}>{name}</Text>
@@ -58,8 +61,8 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     padding: 14,
-    borderBottomWidth: 1,
-    borderColor: "#eee",
+    borderBottomWidth: 2,
+    borderColor: "#ffb71d",
     alignItems: "center",
   },
 
@@ -76,6 +79,7 @@ const styles = StyleSheet.create({
   },
 
   name: {
+    color: "white",
     fontSize: 16,
     fontWeight: "600",
   },

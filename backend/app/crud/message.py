@@ -141,7 +141,7 @@ def get_user_inbox_threads(db: Session, user_id: UUID):
                 "listing_id": thread.listing_id,
                 "last_message": last_message.body if last_message else None,
                 "last_message_at": last_message.created_at if last_message else None,
-                "last_message_user_id": last_message.message_user,
+                "last_message_user_id": last_message.message_user if last_message else None,
                 "unread_count": 0,
                 "listing_image_url": (
                     f"{settings.BACKEND_BASE_URL}/listing-image/{image_to_use.id}/download"
