@@ -1,7 +1,11 @@
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
+
+# EDUARDO ADDED THESE FOR HIS FEATURE
+from fastapi.responses import HTMLResponse
 from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.templating import Jinja2Templates
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
@@ -17,6 +21,9 @@ from backend.app.db.dependencies import get_current_user, get_db
 from backend.app.models import User
 from backend.app.schemas import UserRegister, UserResponse
 from backend.app.config.settings import settings
+
+templates = Jinja2Templates(directory="app/templates")
+
 auth_router = APIRouter(prefix="/auth", tags=["auth"])
 
 
@@ -87,29 +94,49 @@ def me(current_user: User = Depends(get_current_user)):
     }
 
 
-@auth_router.get("/verify-email")
-def verify_email(token: str, db: Session = Depends(get_db)):
-    payload = decode_access_token(token)
+# @auth_router.get("/verify-email")
+# def verify_email(token: str, db: Session = Depends(get_db)):
+#     payload = decode_access_token(token)
 
+#     if payload.get("type") != "email_verification":
+#         raise HTTPException(status_code=400, detail="Invalid token")
+
+#     user_id = payload.get("sub")
+#     if not user_id:
+#         raise HTTPException(status_code=400, detail="Invalid token")
+
+#     user = db.get(User, user_id)
+#     if not user:
+#         raise HTTPException(status_code=404, detail="User not found")
+
+#     if user.is_email_verified:
+#         return {"message": "Email already verified"}
+
+#     user.is_email_verified = True
+#     user.email_verified_at = datetime.now(timezone.utc)
+#     db.commit()
+
+#     return {"message": "Email verified successfully"}
+
+
+# EDUARDO
+@auth_router.get("/verify-email", response_class=HTMLResponse)
+def verify_email(request: Request, token: str, db: Session = Depends(get_db)):
+    payload = decode_access_token(token)
     if payload.get("type") != "email_verification":
         raise HTTPException(status_code=400, detail="Invalid token")
-
     user_id = payload.get("sub")
     if not user_id:
         raise HTTPException(status_code=400, detail="Invalid token")
-
     user = db.get(User, user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-
     if user.is_email_verified:
-        return {"message": "Email already verified"}
-
+        return templates.TemplateResponse("verify_email.html", {"request": request})
     user.is_email_verified = True
     user.email_verified_at = datetime.now(timezone.utc)
     db.commit()
-
-    return {"message": "Email verified successfully"}
+    return templates.TemplateResponse("verify_email.html", {"request": request})
 
 
 @auth_router.post("/resend-verification")
