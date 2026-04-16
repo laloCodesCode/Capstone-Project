@@ -131,3 +131,17 @@ export interface ListingUpdate {
   category_id?: string;
   status?: string;
 }
+
+//reports
+export interface ReportCreate {
+  listing_id: string;
+  reason: string;
+}
+
+export interface ReportResponse {
+  id: string;
+  reporter_id: string;
+  listing_id: string;
+  reason: string;
+  created_at: string;
+}

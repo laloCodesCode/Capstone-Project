@@ -10,10 +10,9 @@ import {
   Modal,
   TouchableOpacity,
   ScrollView,
-  RefreshControl
+  RefreshControl,
 } from "react-native";
 import ItemListingCard from "../../src/components/itemListingCard";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { itemService } from "../../src/services/item";
 import { ItemResponse } from "../../src/types/item";
 import { categoryService } from "../../src/services/category";
@@ -42,7 +41,6 @@ export default function HomeScreen() {
         category_id: categoryId || undefined,
       });
 
-
       setItems(data);
     } catch (err: any) {
       setError(err.message || "Failed to load items");
@@ -50,9 +48,6 @@ export default function HomeScreen() {
       setLoading(false);
     }
   };
-
-
-
 
   const loadCategories = async () => {
     try {
@@ -63,18 +58,17 @@ export default function HomeScreen() {
     }
   };
 
-
   useEffect(() => {
     loadCategories();
     loadItems();
   }, []);
 
   const childCategories = categories.filter(
-    (category) => category.parent_id !== null
+    (category) => category.parent_id !== null,
   );
 
   const selectedCategory = categories.find(
-    (category) => category.id === selectedCategoryId
+    (category) => category.id === selectedCategoryId,
   );
 
   const handleSearchSubmit = () => {
@@ -97,7 +91,7 @@ export default function HomeScreen() {
     setRefreshing(true);
     await loadItems();
     setRefreshing(false);
-  }
+  };
 
   if (loading && items.length === 0) {
     return (
@@ -116,7 +110,10 @@ export default function HomeScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.primary01 }} edges={["top"]}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: colors.primary01 }}
+      edges={["top"]}
+    >
       <View style={styles.container}>
         <View style={styles.searchSection}>
           <TextInput
@@ -128,7 +125,7 @@ export default function HomeScreen() {
             style={styles.searchInput}
             returnKeyType="search"
           />
-  
+
           <Pressable
             style={styles.dropdownButton}
             onPress={() => setDropdownVisible(true)}
@@ -139,7 +136,7 @@ export default function HomeScreen() {
             <Text style={styles.dropdownArrow}>▼</Text>
           </Pressable>
         </View>
-  
+
         <FlatList
           data={items}
           keyExtractor={(item) => item.id}
@@ -158,7 +155,7 @@ export default function HomeScreen() {
             <Text style={styles.emptyText}>No items listed yet.</Text>
           }
         />
-  
+
         <Modal
           visible={dropdownVisible}
           transparent
@@ -177,7 +174,7 @@ export default function HomeScreen() {
                 >
                   <Text style={styles.dropdownItemText}>All Categories</Text>
                 </TouchableOpacity>
-  
+
                 {childCategories.map((category) => (
                   <TouchableOpacity
                     key={category.id}
