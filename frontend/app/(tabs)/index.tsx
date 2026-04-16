@@ -13,7 +13,6 @@ import {
   RefreshControl,
 } from "react-native";
 import ItemListingCard from "../../src/components/itemListingCard";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { itemService } from "../../src/services/item";
 import { ItemResponse } from "../../src/types/item";
 import { categoryService } from "../../src/services/category";
