@@ -10,10 +10,10 @@ from backend.app.routes.message import message_router
 from backend.app.routes.notification import notification_router
 from backend.app.routes.report import report_router
 from backend.app.routes.review import review_router
-from backend.app.routes.admin import admin_router
 from backend.app.routes.user import user_router
+
 app = FastAPI()
-app.include_router(router)
+# app.include_router(router)
 app.include_router(auth_router)
 app.include_router(listing_router)
 app.include_router(category_router)
@@ -24,3 +24,4 @@ app.include_router(notification_router)
 app.include_router(review_router)
 app.include_router(admin_router)
 app.include_router(user_router)
+app.include_router(report_router)
