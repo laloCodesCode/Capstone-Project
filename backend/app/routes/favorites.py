@@ -35,21 +35,7 @@ def add_favorite(
     if existing_favorite:
         return existing_favorite
 
-    favorite = create_favorite(db, current_user.id, listing_id)
-
-    listing = db.get(Listing, listing_id)
-
-    if listing and listing.seller_id != current_user.id:
-        create_notification(
-            db=db,
-            user_id=UUID(str(listing.seller_id)),
-            actor_user_id=current_user.id,
-            listing_id=listing_id,
-            type="favorite",
-            content=f"{current_user.username} liked your listing",
-        )
-
-    return favorite
+    return create_favorite(db, current_user.id, listing_id)
 
 
 @favorite_router.get("/", response_model=list[FavoriteListingResponse])

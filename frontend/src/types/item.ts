@@ -12,10 +12,10 @@ export interface PostItem {
 }
 
 export interface ItemSeller {
+    id: string;
     username: string;
     school_email: string;
 }
-
 
 export interface ItemImage {
     id: string;

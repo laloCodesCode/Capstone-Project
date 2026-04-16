@@ -13,9 +13,11 @@ import { MeResponse } from "../types/auth";
 import { itemService } from "../services/item";
 import { favoriteService } from "../services/favorite";
 import { useFocusEffect, useRouter } from "expo-router";
+
 type ProfileTopTabsProps = {
   profile: MeResponse | null;
   logout: () => Promise<void>;
+  refreshProfile: () => Promise<void>;
 };
 
 type ListingImage = {
@@ -282,9 +284,11 @@ function FavoritesScreen() {
 function SettingsScreen({
   profile,
   logout,
+  refreshProfile,
 }: {
   profile: MeResponse | null;
   logout: () => Promise<void>;
+  refreshProfile: () => Promise<void>;
 }) {
   return (
     <View
@@ -326,6 +330,7 @@ function SettingsScreen({
 export default function ProfileTopTabs({
   profile,
   logout,
+  refreshProfile,
 }: ProfileTopTabsProps) {
   return (
     <Tab.Navigator
@@ -358,8 +363,14 @@ export default function ProfileTopTabs({
       <Tab.Screen name="Listings" component={ListingsScreen} />
       <Tab.Screen name="Favorites" component={FavoritesScreen} />
       <Tab.Screen name="Settings">
-        {() => <SettingsScreen profile={profile} logout={logout} />}
-      </Tab.Screen>
+  {() => (
+    <SettingsScreen
+      profile={profile}
+      logout={logout}
+      refreshProfile={refreshProfile}
+    />
+  )}
+</Tab.Screen>
     </Tab.Navigator>
   );
 }

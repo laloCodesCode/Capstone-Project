@@ -10,7 +10,6 @@ class ItemSeller(BaseModel):
     school_email: str
 
 
-
 class ListingCreate(BaseModel):
     title: str
     description: str

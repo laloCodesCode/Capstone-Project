@@ -70,6 +70,7 @@ export interface MeResponse {
   username: string;
   school_email: string;
   is_admin: boolean;
+  profile_image_url?: string | null;
 }
 
 export interface MessageResponse {

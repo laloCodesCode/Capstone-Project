@@ -18,7 +18,6 @@ import { ItemResponse } from "../../src/types/item";
 import { categoryService } from "../../src/services/category";
 import { CategoryResponse } from "../../src/types/category";
 import { colors } from "../../src/styles/colors";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
   const [items, setItems] = useState<ItemResponse[]>([]);
@@ -280,3 +279,4 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
 });
+
