@@ -1,9 +1,3 @@
-# Table of Content
-
-Frontend
-
-Backend
-
 # GenieMart 🍳
 
 > Senior Capstone
@@ -27,6 +21,10 @@ GenieMart is an online market place like Facebook market place but it is specifi
 >
 > we took a highly collaborative approach to our work loads everyone played a roll in all aspects of
 > development all contributions outlined are the significant individual contributions!
+
+## 🤩 Features
+
+-
 
 ## 💻🛠️ Tech Stack
 
