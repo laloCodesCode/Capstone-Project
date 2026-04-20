@@ -30,23 +30,23 @@ GenieMart is an online market place like Facebook market place but it is specifi
 
 **🥸Backend development:**
 
-- Python
-  - FastAPI - Web framework
-  - SQLAlchemey - ORM, type safe queries
-  - Pydantic - Settings management
-  - JWT - authentication
-  - Neon Serverless PostgreSQL Database - Production database
-  - Dockerized PostgreSQL Database - Development database
-  - Cloudflare R2 - Object/file storage
-  - Uvicorn - local hosting web server (development/testing)
+- **Python**
+  - **FastAPI** - Web framework
+  - **SQLAlchemey** - ORM, type safe queries
+  - **Pydantic** - Settings management
+  - **JWT** - authentication
+  - **Neon Serverless PostgreSQL Database** - Production database
+  - **Dockerized PostgreSQL Database** - Development database
+  - **Cloudflare R2** - Object/file storage
+  - **Uvicorn** - local hosting web server (development/testing)
 
 **👀 Frontend development:**
 
-- Typescript
-  - React Native - Cross platform UI framework
-  - Expo/Expo Router - Development platform/tool provider and file based mobile app navigation
-- CSS - UI styling
+- **Typescript**
+  - **React Native** - Cross platform UI framework
+  - **Expo/Expo Router** - Development platform/tool provider and file based mobile app navigation
+- **CSS** - UI styling
 
 **🚀 Deployment:**
 
-- Render - Backend hosting platfrom
+- **Render** - Backend hosting platfrom
