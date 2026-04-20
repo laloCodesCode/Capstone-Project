@@ -1,4 +1,4 @@
-# GenieMart 🍳
+# GenieMart ⚔️
 
 > Senior Capstone
 
