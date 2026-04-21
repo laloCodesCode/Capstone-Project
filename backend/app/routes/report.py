@@ -11,6 +11,7 @@ from backend.app.crud.report import (
     get_report,
 )
 from backend.app.db.dependencies import get_db
+from backend.app.models.listing import Listing
 from backend.app.models.user import User
 from backend.app.schemas.report import ReportCreate, ReportResponse
 
@@ -27,13 +28,33 @@ def submit_report(
     return create_report(db=db, reporter_id=current_user.id, payload=payload)
 
 
-# Admin only — view all reports
-@report_router.get("/", response_model=list[ReportResponse])
+# # Admin only — view all reports
+# @report_router.get("/", response_model=list[ReportResponse])
+# def get_reports(
+#     db: Session = Depends(get_db),
+#     current_admin: User = Depends(get_admin_user),
+# ):
+#     return get_all_reports(db)
+@report_router.get("/")
 def get_reports(
     db: Session = Depends(get_db),
     current_admin: User = Depends(get_admin_user),
 ):
-    return get_all_reports(db)
+    reports = get_all_reports(db)
+    result = []
+    for report in reports:
+        listing = db.get(Listing, report.listing_id)
+        result.append(
+            {
+                "id": str(report.id),
+                "reporter_id": str(report.reporter_id),
+                "listing_id": str(report.listing_id),
+                "listing_title": listing.title if listing else "Deleted Listing",
+                "reason": report.reason,
+                "created_at": report.created_at,
+            }
+        )
+    return result
 
 
 # Admin only — delete a report

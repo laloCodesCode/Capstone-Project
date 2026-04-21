@@ -1022,7 +1022,8 @@ export default function AdminScreen() {
                 {new Date(item.created_at).toLocaleDateString()}
               </Text>
             </View>
-            <Text style={adminStyles.email}>Listing ID: {item.listing_id}</Text>
+            {/*<Text style={adminStyles.email}>Listing ID: {item.listing_id}</Text>*/}
+            <Text style={adminStyles.email}>{item.listing_title}</Text>
             <Text style={{ color: "#a0aec0", fontSize: 13 }}>
               Reason: {item.reason}
             </Text>

@@ -143,6 +143,7 @@ export interface ReportResponse {
   id: string;
   reporter_id: string;
   listing_id: string;
+  listing_title: string;
   reason: string;
   created_at: string;
 }
