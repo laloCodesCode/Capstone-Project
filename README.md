@@ -24,7 +24,11 @@ GenieMart is an online market place like Facebook market place but it is specifi
 
 ## 🤩 Features
 
--
+- Guaranteed Safety! Only users with verified accounts are permitted to sell and buy.
+- Browse and Search listings by category or keyword
+- Post your own items with up to 8 photos!
+- Mange your profile! Whether you are a seller, shopper, or both!
+- Built in private messaging between sellers and shoppers.
 
 ## 💻🛠️ Tech Stack
 
@@ -41,6 +45,8 @@ GenieMart is an online market place like Facebook market place but it is specifi
   - **Uvicorn** - local hosting web server (development/testing)
 
 **👀 Frontend development:**
+
+-
 
 - **Typescript**
   - **React Native** - Cross platform UI framework
