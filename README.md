@@ -46,8 +46,6 @@ GenieMart is an online market place like Facebook market place but it is specifi
 
 **👀 Frontend development:**
 
--
-
 - **Typescript**
   - **React Native** - Cross platform UI framework
   - **Expo/Expo Router** - Development platform/tool provider and file based mobile app navigation
