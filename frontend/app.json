@@ -9,9 +9,12 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.geniemart.frontend",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
- 
     "web": {
       "output": "static",
       "favicon": "./assets/images/favicon.png"
@@ -30,7 +33,6 @@
           }
         }
       ],
-
       [
         "expo-camera",
         {
@@ -40,14 +42,18 @@
           "barcodeScannerEnabled": true
         }
       ],
-
-
-
       "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "76e6af04-575e-4379-9436-7da3ed7e3e83"
+      }
+    },
+    "owner": "geniemart"
   }
 }
