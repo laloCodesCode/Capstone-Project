@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
-  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -10,6 +9,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
+import { Image } from "expo-image";
 import { useLocalSearchParams } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { Ionicons } from "@expo/vector-icons";
@@ -36,7 +36,7 @@ export default function ItemDetailsScreen() {
   const [isFavorited, setIsFavorited] = useState(false);
   const [favoriteLoading, setFavoriteLoading] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
-
+  const [loadingImages, setLoadingImages] = useState<Record<string, boolean>>({});
   useEffect(() => {
     const loadToken = async () => {
       const savedToken = await SecureStore.getItemAsync("token");
@@ -76,7 +76,7 @@ export default function ItemDetailsScreen() {
       try {
         const favorites = await favoriteService.getFavorites();
         const favorited = favorites.some(
-          (favorite: any) => favorite.listing_id === id
+          (favorite: any) => favorite.listing_id === id,
         );
         setIsFavorited(favorited);
       } catch (err: any) {
@@ -86,6 +86,13 @@ export default function ItemDetailsScreen() {
 
     loadFavoriteStatus();
   }, [id]);
+
+  const imageUrls =
+    item?.images?.map(
+      (img) => `${BASE_URL}/listing-image/${img.id}/download?id=${img.id}`,
+    ) || [];
+
+  const downloadUrl = imageUrls[0] ?? null;
 
   const handleFavoriteToggle = async () => {
     if (!id || favoriteLoading) return;
@@ -116,6 +123,7 @@ export default function ItemDetailsScreen() {
       setError("");
 
       const savedToken = await SecureStore.getItemAsync("token");
+
       if (!savedToken) {
         throw new Error("You must be logged in to contact the seller.");
       }
@@ -171,13 +179,6 @@ export default function ItemDetailsScreen() {
     );
   }
 
-  const imageUrls =
-    item.images?.map(
-      (img) => `${BASE_URL}/listing-image/${img.id}/download?id=${img.id}`
-    ) || [];
-
-  const downloadUrl = imageUrls[0] ?? null;
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#0f2044" }}>
       <ScrollView contentContainerStyle={styles.container}>
@@ -193,18 +194,39 @@ export default function ItemDetailsScreen() {
               }}
               scrollEventThrottle={16}
             >
-              {imageUrls.map((url, index) => (
-                <Image
-                  key={index}
-                  source={{
-                    uri: url,
-                    headers: {
-                      Authorization: `Bearer ${token}`,
-                    },
-                  }}
-                  style={styles.image}
-                  resizeMode="cover"
-                />
+              {imageUrls.map((url) => (
+                <View key={url} style={styles.imageWrapper}>
+                  {loadingImages[url] !== false && (
+                    <View style={styles.imageLoader}>
+                      <ActivityIndicator color="#ffffff" size="small" />
+                    </View>
+                  )}
+
+                  <Image
+                    source={{
+                      uri: url,
+                      headers: {
+                        Authorization: `Bearer ${token}`,
+                      },
+                    }}
+                    style={styles.image}
+                    contentFit="cover"
+                    cachePolicy="memory-disk"
+                    transition={200}
+                    onLoadStart={() =>
+                      setLoadingImages((prev) => ({
+                        ...prev,
+                        [url]: true,
+                      }))
+                    }
+                    onLoadEnd={() =>
+                      setLoadingImages((prev) => ({
+                        ...prev,
+                        [url]: false,
+                      }))
+                    }
+                  />
+                </View>
               ))}
             </ScrollView>
 
@@ -316,13 +338,24 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 4,
   },
-  image: {
+  imageWrapper: {
     width: width - 40,
     height: 300,
     borderRadius: 12,
-    marginRight: 0,
+    overflow: "hidden",
+    backgroundColor: "#d9d9d9",
   },
-
+  image: {
+    width: "100%",
+    height: "100%",
+  },
+  imageLoader: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(15, 32, 68, 0.35)",
+    zIndex: 1,
+  },
   titleRow: {
     flexDirection: "row",
     alignItems: "flex-start",
@@ -391,7 +424,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 10,
   },
-
   dot: {
     width: 8,
     height: 8,
@@ -399,7 +431,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#7a7a7a",
     marginHorizontal: 4,
   },
-
   activeDot: {
     backgroundColor: "#ffffff",
   },

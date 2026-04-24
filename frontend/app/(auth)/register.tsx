@@ -81,7 +81,7 @@ export default function RegisterScreen() {
     { field: "username", placeholder: "Username" },
     {
       field: "school_email",
-      placeholder: "School Email",
+      placeholder: "Email",
       keyboard: "email-address",
     },
     {
