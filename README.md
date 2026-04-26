@@ -60,19 +60,23 @@ GenieMart is an online market place like Facebook market place but it is specifi
 1. Clone the project on your machine.
 2. Make sure you have Node and Python installed on your system.
 3. Move into the frontend directory like so:
-      ```bash
-      cd frontend
-      ```
+
+   ```bash
+   cd frontend
+   ```
+
 4. Install the npm packages like so:
-      ```bash
-      npm install
-      ```
+
+   ```bash
+   npm install
+   ```
+
 5. Now that all packages are installed you may run the frontend and follow the CLI to launch the app like so:
-      ```bash
+   `bash
       npx expo start
-      ```
-> [!NOTE]
-> You do not need to rub the backend as it is hosted on the render platform!
+      `
+   > [!NOTE]
+   > You do not need to run the backend as it is hosted on the render platform!
 
 > [!WARNING]
 > You must have an IOS/Andriod emulator installed to run the frontend on a laptop
